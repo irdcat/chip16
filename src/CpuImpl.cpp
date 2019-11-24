@@ -1,12 +1,32 @@
 #include "CpuImpl.hpp"
 
-u16 CpuImpl::fetchOpcode()
+CpuImpl::CpuImpl(const std::shared_ptr<Memory>& memory)
+    : memory(memory)
+    , registers()
 {
-    // TODO: Implement opcode fetching
-    return u16();
 }
 
-void CpuImpl::executeInstruction()
+u16 CpuImpl::fetchOpcode()
+{
+    u16 opcode = memory->readWord(registers.pc);
+    registers.pc += 2;
+
+    return opcode;
+}
+
+u16 CpuImpl::popFromStack()
+{
+    registers.sp += 2;
+    return memory->readWord(registers.sp);
+}
+
+void CpuImpl::pushIntoStack(u16 value)
+{
+    memory->writeWord(registers.sp, value);
+    registers.sp -= 2;
+}
+
+void CpuImpl::executeInstruction(u16 opcode)
 {
     // Implement opcode executing
 }
