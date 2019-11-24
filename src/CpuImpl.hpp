@@ -1,18 +1,27 @@
 #pragma once
 
+#include <memory>
+
 #include "Cpu.hpp"
 #include "CpuFlags.hpp"
+#include "Memory.hpp"
 
 class CpuImpl : public Cpu
 {
 public:
 	CpuImpl() = default;
 
+    CpuImpl(const std::shared_ptr<Memory>& memory);
+
     ~CpuImpl() = default;
 
     u16 fetchOpcode() override;
 
-	void executeInstruction() override;
+    u16 popFromStack() override;
+
+    void pushIntoStack(u16 value) override;
+
+	void executeInstruction(u16 opcode) override;
 
     struct Registers 
     {
@@ -26,4 +35,5 @@ public:
 
 private:
     Registers registers;
+    std::shared_ptr<Memory> memory;
 };
