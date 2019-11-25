@@ -46,10 +46,10 @@ TEST_F(CpuImplTests, popFromStackTest)
 {
     auto& regs = testedCpu->getRegisters();
     regs.sp = 0xFFE0;
-    EXPECT_CALL(*memory, readWord(0xFFE2)).Times(1).WillOnce(Return(0x5555));
+    EXPECT_CALL(*memory, readWord(0xFFDE)).Times(1).WillOnce(Return(0x5555));
     auto result = testedCpu->popFromStack();
     EXPECT_EQ(0x5555, result);
-    EXPECT_EQ(0xFFE2, regs.sp);
+    EXPECT_EQ(0xFFDE, regs.sp);
 }
 
 TEST_F(CpuImplTests, pushIntoStackTest)
@@ -58,5 +58,5 @@ TEST_F(CpuImplTests, pushIntoStackTest)
     regs.sp = 0xFFE0;
     EXPECT_CALL(*memory, writeWord(0xFFE0, 0x7777)).Times(1);
     testedCpu->pushIntoStack(0x7777);
-    EXPECT_EQ(0xFFDE, regs.sp);
+    EXPECT_EQ(0xFFE2, regs.sp);
 }
