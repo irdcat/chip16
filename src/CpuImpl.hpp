@@ -5,6 +5,7 @@
 #include "Cpu.hpp"
 #include "CpuFlags.hpp"
 #include "Memory.hpp"
+#include "ConditionalBranch.hpp"
 
 class CpuImpl : public Cpu
 {
@@ -36,4 +37,8 @@ public:
 private:
     Registers registers;
     std::shared_ptr<Memory> memory;
+
+    bool executeJumpInstruction(u16 opcode);
+
+    bool evaluateBranchCondition(unsigned index);
 };
