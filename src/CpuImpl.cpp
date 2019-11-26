@@ -29,11 +29,20 @@ void CpuImpl::pushIntoStack(u16 value)
 void CpuImpl::executeInstruction(u16 opcode)
 {
     const auto group = (opcode & 0xF000) >> 12;
+    bool result;
     switch (group)
     {
     case 0x1: 
-        executeJumpInstruction(opcode); 
+        result = executeJumpInstruction(opcode); 
         break;
+    case 0xC:
+        result = executeStackInstruction(opcode);
+        break;
+    }
+
+    if (!result) 
+    {
+        // TODO: Log error
     }
 }
 
@@ -133,6 +142,45 @@ bool CpuImpl::executeJumpInstruction(u16 opcode)
         pushIntoStack(registers.pc);
         registers.pc = addr;
     }
+    return true;
+}
+
+bool CpuImpl::executeStackInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = (opcode & 0xF00) >> 8;
+    if (innerInstructionIndex > 5)
+        return false;
+
+    if (innerInstructionIndex == 0)
+    {
+        const auto REG_INDEX = opcode & 0xF;
+        pushIntoStack(registers.r[REG_INDEX]);
+    }
+    else if (innerInstructionIndex == 1)
+    {
+        const auto REG_INDEX = opcode & 0xF;
+        registers.r[REG_INDEX] = popFromStack();
+    }
+    else if (innerInstructionIndex == 2)
+    {
+        for (auto i = 0; i < 16; i++)
+            pushIntoStack(registers.r[i]);
+    }
+    else if (innerInstructionIndex == 3)
+    {
+        for (auto i = 0; i < 16; i++)
+            registers.r[i] = popFromStack();
+    }
+    else if (innerInstructionIndex == 4)
+    {
+        pushIntoStack(registers.flags.raw);
+    }
+    else if (innerInstructionIndex == 5)
+    {
+        registers.flags.raw = popFromStack() & 0xFF;
+    }
+
+    registers.pc += 2;
     return true;
 }
 

@@ -39,6 +39,7 @@ private:
     std::shared_ptr<Memory> memory;
 
     bool executeJumpInstruction(u16 opcode);
+    bool executeStackInstruction(u16 opcode);
 
     bool evaluateBranchCondition(unsigned index);
 };
