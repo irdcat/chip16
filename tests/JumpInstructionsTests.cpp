@@ -20,7 +20,7 @@ namespace
         MOCK_CONST_METHOD1(readControllerState, ControllerState(unsigned));
     };
 
-    class JumpInstructionTests : public ::testing::Test
+    class JumpInstructionsTests : public ::testing::Test
     {
     protected:
         void SetUp() override
@@ -53,7 +53,7 @@ namespace
     };
 };
 
-TEST_F(JumpInstructionTests, testDirectUncontidionalJump)
+TEST_F(JumpInstructionsTests, testDirectUncontidionalJump)
 {
     // JMP addr
     auto& regs = testedCpu->getRegisters();
@@ -63,7 +63,7 @@ TEST_F(JumpInstructionTests, testDirectUncontidionalJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectCarryConditionalJump_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectCarryConditionalJump_shouldJump)
 {
     // JMC addr
     auto& regs = testedCpu->getRegisters();
@@ -74,7 +74,7 @@ TEST_F(JumpInstructionTests, testDirectCarryConditionalJump_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectCarryConditionalJump_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectCarryConditionalJump_shouldNotJump)
 {
     // JMC addr
     auto& regs = testedCpu->getRegisters();
@@ -85,7 +85,7 @@ TEST_F(JumpInstructionTests, testDirectCarryConditionalJump_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_zero_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_zero_shouldJump)
 {
     // JZ addr
     auto& regs = testedCpu->getRegisters();
@@ -97,7 +97,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_zero_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_zero_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_zero_shouldNotJump)
 {
     // JZ addr
     auto& regs = testedCpu->getRegisters();
@@ -109,7 +109,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_zero_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_notZero_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_notZero_shouldJump)
 {
     // JNZ addr
     auto& regs = testedCpu->getRegisters();
@@ -121,7 +121,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_notZero_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_notZero_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_notZero_shouldNotJump)
 {
     // JNZ addr
     auto& regs = testedCpu->getRegisters();
@@ -133,7 +133,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_notZero_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_negative_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_negative_shouldJump)
 {
     // JN addr
     auto& regs = testedCpu->getRegisters();
@@ -145,7 +145,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_negative_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_negative_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_negative_shouldNotJump)
 {
     // JN addr
     auto& regs = testedCpu->getRegisters();
@@ -157,7 +157,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_negative_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_notNegative_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_notNegative_shouldJump)
 {
     // JNN addr
     auto& regs = testedCpu->getRegisters();
@@ -169,7 +169,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_notNegative_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_notNegative_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_notNegative_shouldNotJump)
 {
     // JNN addr
     auto& regs = testedCpu->getRegisters();
@@ -181,7 +181,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_notNegative_shouldNotJump
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_positive_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_positive_shouldJump)
 {
     // JP addr
     auto& regs = testedCpu->getRegisters();
@@ -194,7 +194,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_positive_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_positive_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_positive_shouldNotJump)
 {
     // JP addr
     auto& regs = testedCpu->getRegisters();
@@ -207,7 +207,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_positive_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_overflow_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_overflow_shouldJump)
 {
     // JO addr
     auto& regs = testedCpu->getRegisters();
@@ -219,7 +219,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_overflow_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_overflow_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_overflow_shouldNotJump)
 {
     // JO addr
     auto& regs = testedCpu->getRegisters();
@@ -231,7 +231,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_overflow_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_notOverflow_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_notOverflow_shouldJump)
 {
     // JNO addr
     auto& regs = testedCpu->getRegisters();
@@ -243,7 +243,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_notOverflow_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_notOverflow_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_notOverflow_shouldNotJump)
 {
     // JNO addr
     auto& regs = testedCpu->getRegisters();
@@ -255,7 +255,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_notOverflow_shouldNotJump
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_above_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_above_shouldJump)
 {
     // JA addr
     auto& regs = testedCpu->getRegisters();
@@ -268,7 +268,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_above_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_above_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_above_shouldNotJump)
 {
     // JA addr
     auto& regs = testedCpu->getRegisters();
@@ -281,7 +281,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_above_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_aboveEqual_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_aboveEqual_shouldJump)
 {
     // JAE addr
     auto& regs = testedCpu->getRegisters();
@@ -293,7 +293,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_aboveEqual_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_aboveEqual_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_aboveEqual_shouldNotJump)
 {
     // JAE addr
     auto& regs = testedCpu->getRegisters();
@@ -305,7 +305,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_aboveEqual_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_below_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_below_shouldJump)
 {
     // JB addr
     auto& regs = testedCpu->getRegisters();
@@ -317,7 +317,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_below_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_below_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_below_shouldNotJump)
 {
     // JB addr
     auto& regs = testedCpu->getRegisters();
@@ -329,7 +329,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_below_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_belowEqual_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_belowEqual_shouldJump)
 {
     // JBE addr
     auto& regs = testedCpu->getRegisters();
@@ -342,7 +342,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_belowEqual_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_belowEqual_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_belowEqual_shouldNotJump)
 {
     // JBE addr
     auto& regs = testedCpu->getRegisters();
@@ -355,7 +355,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_belowEqual_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_greater_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_greater_shouldJump)
 {
     // JG addr
     auto& regs = testedCpu->getRegisters();
@@ -369,7 +369,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_greater_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_greater_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_greater_shouldNotJump)
 {
     // JG addr
     auto& regs = testedCpu->getRegisters();
@@ -383,7 +383,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_greater_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_greaterEqual_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_greaterEqual_shouldJump)
 {
     // JGE addr
     auto& regs = testedCpu->getRegisters();
@@ -396,7 +396,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_greaterEqual_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_greaterEqual_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_greaterEqual_shouldNotJump)
 {
     // JGE addr
     auto& regs = testedCpu->getRegisters();
@@ -409,7 +409,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_greaterEqual_shouldNotJum
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_less_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_less_shouldJump)
 {
     // JL addr
     auto& regs = testedCpu->getRegisters();
@@ -422,7 +422,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_less_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_less_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_less_shouldNotJump)
 {
     // JL addr
     auto& regs = testedCpu->getRegisters();
@@ -435,7 +435,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_less_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_lessEqual_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_lessEqual_shouldJump)
 {
     // JLE addr
     auto& regs = testedCpu->getRegisters();
@@ -449,7 +449,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_lessEqual_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalJump_lessEqual_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectConditionalJump_lessEqual_shouldNotJump)
 {
     // JLE addr
     auto& regs = testedCpu->getRegisters();
@@ -463,7 +463,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalJump_lessEqual_shouldNotJump)
     EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectEqualConditionalJump_shouldJump)
+TEST_F(JumpInstructionsTests, testDirectEqualConditionalJump_shouldJump)
 {
     // JME Rx, Ry, addr
     const std::size_t REG_INDEX_1 = 5;
@@ -478,7 +478,7 @@ TEST_F(JumpInstructionTests, testDirectEqualConditionalJump_shouldJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectEqualConditionalJump_shouldNotJump)
+TEST_F(JumpInstructionsTests, testDirectEqualConditionalJump_shouldNotJump)
 {
     // JME Rx, Ry, addr
     const std::size_t REG_INDEX_1 = 5;
@@ -493,7 +493,7 @@ TEST_F(JumpInstructionTests, testDirectEqualConditionalJump_shouldNotJump)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectCall)
+TEST_F(JumpInstructionsTests, testDirectCall)
 {
     // CALL addr
     auto& regs = testedCpu->getRegisters();
@@ -506,7 +506,7 @@ TEST_F(JumpInstructionTests, testDirectCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testReturn)
+TEST_F(JumpInstructionsTests, testReturn)
 {
     // RET
     auto& regs = testedCpu->getRegisters();
@@ -518,7 +518,7 @@ TEST_F(JumpInstructionTests, testReturn)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testJumpIndirect)
+TEST_F(JumpInstructionsTests, testJumpIndirect)
 {
     // JMP Rx
     const std::size_t REG_INDEX = 5;
@@ -529,7 +529,7 @@ TEST_F(JumpInstructionTests, testJumpIndirect)
     EXPECT_EQ(0x5555, regs.pc);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_zero_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_zero_shouldCall)
 {
     // CZ addr
     auto& regs = testedCpu->getRegisters();
@@ -544,7 +544,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_zero_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_zero_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_zero_shouldNotCall)
 {
     // CZ addr
     auto& regs = testedCpu->getRegisters();
@@ -558,7 +558,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_zero_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_notZero_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_notZero_shouldCall)
 {
     // CNZ addr
     auto& regs = testedCpu->getRegisters();
@@ -573,7 +573,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_notZero_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_notZero_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_notZero_shouldNotCall)
 {
     // CNZ addr
     auto& regs = testedCpu->getRegisters();
@@ -587,7 +587,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_notZero_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_negative_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_negative_shouldCall)
 {
     // CN addr
     auto& regs = testedCpu->getRegisters();
@@ -602,7 +602,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_negative_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_negative_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_negative_shouldNotCall)
 {
     // CN addr
     auto& regs = testedCpu->getRegisters();
@@ -616,7 +616,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_negative_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_notNegative_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_notNegative_shouldCall)
 {
     // CNN addr
     auto& regs = testedCpu->getRegisters();
@@ -631,7 +631,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_notNegative_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_notNegative_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_notNegative_shouldNotCall)
 {
     // CNN addr
     auto& regs = testedCpu->getRegisters();
@@ -645,7 +645,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_notNegative_shouldNotCall
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_positive_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_positive_shouldCall)
 {
     // CP addr
     auto& regs = testedCpu->getRegisters();
@@ -661,7 +661,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_positive_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_positive_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_positive_shouldNotCall)
 {
     // CP addr
     auto& regs = testedCpu->getRegisters();
@@ -676,7 +676,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_positive_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_overflow_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_overflow_shouldCall)
 {
     // CO addr
     auto& regs = testedCpu->getRegisters();
@@ -691,7 +691,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_overflow_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_overflow_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_overflow_shouldNotCall)
 {
     // CO addr
     auto& regs = testedCpu->getRegisters();
@@ -705,7 +705,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_overflow_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_notOverflow_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_notOverflow_shouldCall)
 {
     // CNO addr
     auto& regs = testedCpu->getRegisters();
@@ -720,7 +720,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_notOverflow_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_notOverflow_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_notOverflow_shouldNotCall)
 {
     // CNO addr
     auto& regs = testedCpu->getRegisters();
@@ -734,7 +734,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_notOverflow_shouldNotCall
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_above_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_above_shouldCall)
 {
     // CA addr
     auto& regs = testedCpu->getRegisters();
@@ -750,7 +750,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_above_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_above_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_above_shouldNotCall)
 {
     // CA addr
     auto& regs = testedCpu->getRegisters();
@@ -765,7 +765,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_above_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_aboveEqual_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_aboveEqual_shouldCall)
 {
     // CAE addr
     auto& regs = testedCpu->getRegisters();
@@ -780,7 +780,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_aboveEqual_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_aboveEqual_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_aboveEqual_shouldNotCall)
 {
     // CAE addr
     auto& regs = testedCpu->getRegisters();
@@ -794,7 +794,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_aboveEqual_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_below_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_below_shouldCall)
 {
     // CB addr
     auto& regs = testedCpu->getRegisters();
@@ -809,7 +809,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_below_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_below_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_below_shouldNotCall)
 {
     // CB addr
     auto& regs = testedCpu->getRegisters();
@@ -823,7 +823,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_below_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_belowEqual_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_belowEqual_shouldCall)
 {
     // CBE addr
     auto& regs = testedCpu->getRegisters();
@@ -839,7 +839,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_belowEqual_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_belowEqual_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_belowEqual_shouldNotCall)
 {
     // CBE addr
     auto& regs = testedCpu->getRegisters();
@@ -854,7 +854,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_belowEqual_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_greater_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_greater_shouldCall)
 {
     // CG addr
     auto& regs = testedCpu->getRegisters();
@@ -871,7 +871,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_greater_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_greater_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_greater_shouldNotCall)
 {
     // CG addr
     auto& regs = testedCpu->getRegisters();
@@ -887,7 +887,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_greater_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_greaterEqual_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_greaterEqual_shouldCall)
 {
     // CGE addr
     auto& regs = testedCpu->getRegisters();
@@ -903,7 +903,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_greaterEqual_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_greaterEqual_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_greaterEqual_shouldNotCall)
 {
     // CGE addr
     auto& regs = testedCpu->getRegisters();
@@ -918,7 +918,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_greaterEqual_shouldNotCal
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_less_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_less_shouldCall)
 {
     // CL addr
     auto& regs = testedCpu->getRegisters();
@@ -934,7 +934,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_less_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_less_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_less_shouldNotCall)
 {
     // CL addr
     auto& regs = testedCpu->getRegisters();
@@ -949,7 +949,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_less_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_lessEqual_shouldCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_lessEqual_shouldCall)
 {
     // CLE addr
     auto& regs = testedCpu->getRegisters();
@@ -966,7 +966,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_lessEqual_shouldCall)
     EXPECT_EQ(0xFFEA, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testDirectConditionalCall_lessEqual_shouldNotCall)
+TEST_F(JumpInstructionsTests, testDirectConditionalCall_lessEqual_shouldNotCall)
 {
     // CLE addr
     auto& regs = testedCpu->getRegisters();
@@ -982,7 +982,7 @@ TEST_F(JumpInstructionTests, testDirectConditionalCall_lessEqual_shouldNotCall)
     EXPECT_EQ(0xFFE8, regs.sp);
 }
 
-TEST_F(JumpInstructionTests, testIndirectCall)
+TEST_F(JumpInstructionsTests, testIndirectCall)
 {
     // CALL Rx
     const std::size_t REG_INDEX = 5;
