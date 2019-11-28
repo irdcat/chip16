@@ -182,7 +182,7 @@ bool CpuImpl::executeLoadInstruction(u16 opcode)
     {
         const auto REG_INDEX_X = decodeNibble(opcode, 0);
         const auto REG_INDEX_Y = decodeNibble(opcode, 1);
-        const auto addr = memory->readWord(registers.r[REG_INDEX_Y]);
+        const auto addr = registers.r[REG_INDEX_Y];
         const auto word = memory->readWord(addr);
         registers.pc += 2;
         registers.r[REG_INDEX_X] = word;
@@ -309,7 +309,7 @@ unsigned CpuImpl::decodeNibble(u16 word, unsigned nibblePos)
     if (nibblePos < 4)
     {
         // Hex digit is 4 bit long
-        return (word >> (3 - nibblePos) * 4) & 0xF;
+        return (word >> (nibblePos * 4)) & 0xF;
     }
     else
     {
