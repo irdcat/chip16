@@ -6,6 +6,7 @@
 #include "CpuFlags.hpp"
 #include "Memory.hpp"
 #include "ConditionalBranch.hpp"
+#include "log/Logger.hpp"
 
 class CpuImpl : public Cpu
 {
@@ -45,4 +46,6 @@ private:
 
     bool evaluateBranchCondition(unsigned index);
     unsigned decodeNibble(u16 word, unsigned nibblePos);
+
+    static Logger LOG;
 };

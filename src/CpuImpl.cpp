@@ -1,5 +1,7 @@
 #include "CpuImpl.hpp"
 
+Logger CpuImpl::LOG(STRINGIFY(CpuImpl));
+
 CpuImpl::CpuImpl(const std::shared_ptr<Memory>& memory)
     : memory(memory)
     , registers()
@@ -8,6 +10,7 @@ CpuImpl::CpuImpl(const std::shared_ptr<Memory>& memory)
 
 u16 CpuImpl::fetchOpcode()
 {
+    LOG.debug("Fetching opcode.");
     u16 opcode = memory->readWord(registers.pc);
     registers.pc += 2;
 
@@ -16,20 +19,24 @@ u16 CpuImpl::fetchOpcode()
 
 u16 CpuImpl::popFromStack()
 {
+    LOG.debug("Popping from stack.");
     registers.sp -= 2;
     return memory->readWord(registers.sp);
 }
 
 void CpuImpl::pushIntoStack(u16 value)
 {
+    LOG.debug("Pushing into stack: ", value);
     memory->writeWord(registers.sp, value);
     registers.sp += 2;
 }
 
 void CpuImpl::executeInstruction(u16 opcode)
 {
+    LOG.debug("Executing opcode: ", opcode);
     const auto group = decodeNibble(opcode, 3);
     bool result = false;
+
     switch (group)
     {
     case 0x1: 
@@ -47,9 +54,7 @@ void CpuImpl::executeInstruction(u16 opcode)
     }
 
     if (!result) 
-    {
-        // TODO: Log error
-    }
+        LOG.error("Unknown opcode: ", opcode);
 }
 
 CpuImpl::Registers& CpuImpl::getRegisters()
