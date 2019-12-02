@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Memory.hpp"
+#include "log/Logger.hpp"
 
 class MemoryImpl : public Memory
 {
@@ -23,4 +24,6 @@ public:
 
 private:
     std::vector<u8> memory;
+
+    static Logger LOG;
 };
