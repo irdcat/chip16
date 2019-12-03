@@ -48,6 +48,9 @@ void CpuImpl::executeInstruction(u16 opcode)
     case 0x3:
         result = executeStoreInstruction(opcode);
         break;
+    case 0x7:
+        result = executeBitwiseOrInstruction(opcode);
+        break;
     case 0xC:
         result = executeStackInstruction(opcode);
         break;
@@ -228,6 +231,42 @@ bool CpuImpl::executeStoreInstruction(u16 opcode)
     return true;
 }
 
+bool CpuImpl::executeBitwiseOrInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = decodeNibble(opcode, 2);
+    if (innerInstructionIndex > 2)
+        return false;
+
+    if (innerInstructionIndex == 0)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto word = memory->readWord(registers.pc);
+        registers.pc += 2;
+        registers.r[REG_INDEX] |= word;
+        registers.flags.n = isNegative(registers.r[REG_INDEX]);
+        registers.flags.z = isZero(registers.r[REG_INDEX]);
+    }
+    else if (innerInstructionIndex == 1)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        registers.pc += 2;
+        registers.r[REG_INDEX_X] |= registers.r[REG_INDEX_Y];
+        registers.flags.n = isNegative(registers.r[REG_INDEX_X]);
+        registers.flags.z = isZero(registers.r[REG_INDEX_X]);
+    }
+    else if (innerInstructionIndex == 2)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
+        registers.pc += 2;
+        registers.r[REG_INDEX_Z] = registers.r[REG_INDEX_X] | registers.r[REG_INDEX_Y];
+        registers.flags.n = isNegative(registers.r[REG_INDEX_Z]);
+        registers.flags.z = isZero(registers.r[REG_INDEX_Z]);
+    }
+}
+
 bool CpuImpl::executeStackInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
@@ -320,4 +359,14 @@ unsigned CpuImpl::decodeNibble(u16 word, unsigned nibblePos)
     {
         return 0;
     }
+}
+
+bool CpuImpl::isZero(unsigned data)
+{
+    return (data & 0xFFFF) == 0;
+}
+
+bool CpuImpl::isNegative(unsigned data)
+{
+    return (data >> 15) == 1;
 }

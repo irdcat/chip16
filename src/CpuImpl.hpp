@@ -39,13 +39,17 @@ private:
     Registers registers;
     std::shared_ptr<Memory> memory;
 
-    bool executeJumpInstruction(u16 opcode);
-    bool executeLoadInstruction(u16 opcode);
-    bool executeStoreInstruction(u16 opcode);
-    bool executeStackInstruction(u16 opcode);
+    bool executeJumpInstruction(u16 opcode);      // 1x
+    bool executeLoadInstruction(u16 opcode);      // 2x
+    bool executeStoreInstruction(u16 opcode);     // 3x
+    bool executeBitwiseOrInstruction(u16 opcode); // 7x
+    bool executeStackInstruction(u16 opcode);     // Cx
 
     bool evaluateBranchCondition(unsigned index);
     unsigned decodeNibble(u16 word, unsigned nibblePos);
+
+    bool isZero(unsigned data);
+    bool isNegative(unsigned data);
 
     static Logger LOG;
 };
