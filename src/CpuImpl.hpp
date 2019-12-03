@@ -43,6 +43,7 @@ private:
     bool executeLoadInstruction(u16 opcode);      // 2x
     bool executeStoreInstruction(u16 opcode);     // 3x
     bool executeBitwiseOrInstruction(u16 opcode); // 7x
+    bool executeBitwiseXorInstruction(u16 opcode);// 8x
     bool executeStackInstruction(u16 opcode);     // Cx
 
     bool evaluateBranchCondition(unsigned index);
