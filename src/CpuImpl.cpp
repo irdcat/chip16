@@ -73,87 +73,48 @@ bool CpuImpl::executeJumpInstruction(u16 opcode)
 
     if (innerInstructionIndex == 0)
     {
-        auto addr = memory->readWord(registers.pc);
-        registers.pc = addr;
+        registers.pc = memory->readWord(registers.pc);
     }
     else if (innerInstructionIndex == 1)
     {
-        if (registers.flags.c == 1)
-        {
-            auto addr = memory->readWord(registers.pc);
-            registers.pc = addr;
-        }
-        else
-        {
-            registers.pc += 2;
-        }
+        registers.pc = registers.flags.c == 1 ? memory->readWord(registers.pc) : registers.pc + 2;
     }
     else if (innerInstructionIndex == 2)
     {
-        bool condition = evaluateBranchCondition(opcode & 0xF);
-        if (condition)
-        {
-            auto addr = memory->readWord(registers.pc);
-            registers.pc = addr;
-        }
-        else
-        {
-            registers.pc += 2;
-        }
+        registers.pc = evaluateBranchCondition(decodeNibble(opcode, 0)) ?
+            memory->readWord(registers.pc) : registers.pc + 2;
     }
     else if (innerInstructionIndex == 3)
     {
-        const auto REG_INDEX_X = decodeNibble(opcode, 0);
-        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
-        if (registers.r[REG_INDEX_X] == registers.r[REG_INDEX_Y])
-        {
-            auto addr = memory->readWord(registers.pc);
-            registers.pc = addr;
-        }
-        else
-        {
-            registers.pc += 2;
-        }
+        registers.pc = registers.r[decodeNibble(opcode, 0)] == registers.r[decodeNibble(opcode, 1)] ?
+            memory->readWord(registers.pc) : registers.pc + 2;
     }
     else if (innerInstructionIndex == 4)
     {
         auto addr = memory->readWord(registers.pc);
-        registers.pc += 2;
-        pushIntoStack(registers.pc);
+        pushIntoStack(registers.pc + 2);
         registers.pc = addr;
     }
     else if (innerInstructionIndex == 5)
     {
-        auto addr = popFromStack();
-        registers.pc = addr;
+        registers.pc = popFromStack();
     }
     else if (innerInstructionIndex == 6)
     {
-        const auto REG_INDEX = decodeNibble(opcode, 0);
-        auto addr = registers.r[REG_INDEX];
-        registers.pc = addr;
+        registers.pc = registers.r[decodeNibble(opcode, 0)];
     }
     else if (innerInstructionIndex == 7)
     {
+        auto addr = memory->readWord(registers.pc);
         bool condition = evaluateBranchCondition(decodeNibble(opcode, 0));
-        if (condition)
-        {
-            auto addr = memory->readWord(registers.pc);
-            registers.pc += 2;
-            pushIntoStack(registers.pc);
-            registers.pc = addr;
-        }
-        else
-        {
-            registers.pc += 2;
-        }
+        if(condition)
+            pushIntoStack(registers.pc + 2);
+        registers.pc = condition ? addr : registers.pc + 2;
     }
     else if (innerInstructionIndex == 8)
     {
-        const auto REG_INDEX = decodeNibble(opcode, 0);
-        auto addr = registers.r[REG_INDEX];
-        registers.pc += 2;
-        pushIntoStack(registers.pc);
+        auto addr = registers.r[decodeNibble(opcode, 0)];
+        pushIntoStack(registers.pc + 2);
         registers.pc = addr;
     }
     return true;
@@ -169,20 +130,17 @@ bool CpuImpl::executeLoadInstruction(u16 opcode)
     {
         const auto REG_INDEX = decodeNibble(opcode, 0);
         const auto word = memory->readWord(registers.pc);
-        registers.pc += 2;
         registers.r[REG_INDEX] = word;
     }
     else if (innerInstructionIndex == 1)
     {
         const auto word = memory->readWord(registers.pc);
-        registers.pc += 2;
         registers.sp = word;
     }
     else if (innerInstructionIndex == 2)
     {
         const auto REG_INDEX = decodeNibble(opcode, 0);
         const auto addr = memory->readWord(registers.pc);
-        registers.pc += 2;
         const auto word = memory->readWord(addr);
         registers.r[REG_INDEX] = word;
     }
@@ -192,17 +150,15 @@ bool CpuImpl::executeLoadInstruction(u16 opcode)
         const auto REG_INDEX_Y = decodeNibble(opcode, 1);
         const auto addr = registers.r[REG_INDEX_Y];
         const auto word = memory->readWord(addr);
-        registers.pc += 2;
         registers.r[REG_INDEX_X] = word;
     }
     else if (innerInstructionIndex == 4)
     {
         const auto REG_INDEX_X = decodeNibble(opcode, 0);
         const auto REG_INDEX_Y = decodeNibble(opcode, 1);
-        registers.pc += 2;
         registers.r[REG_INDEX_X] = registers.r[REG_INDEX_Y];
     }
-
+    registers.pc += 2;
     return true;
 }
 
@@ -216,7 +172,6 @@ bool CpuImpl::executeStoreInstruction(u16 opcode)
     {
         const auto REG_INDEX = decodeNibble(opcode, 0);
         const auto addr = memory->readWord(registers.pc);
-        registers.pc += 2;
         memory->writeWord(addr, registers.r[REG_INDEX]);
     }
     else if (innerInstructionIndex == 1)
@@ -224,10 +179,9 @@ bool CpuImpl::executeStoreInstruction(u16 opcode)
         const auto REG_INDEX_X = decodeNibble(opcode, 0);
         const auto REG_INDEX_Y = decodeNibble(opcode, 1);
         const auto addr = registers.r[REG_INDEX_Y];
-        registers.pc += 2;
         memory->writeWord(addr, registers.r[REG_INDEX_X]);
     }
-
+    registers.pc += 2;
     return true;
 }
 
@@ -241,7 +195,6 @@ bool CpuImpl::executeBitwiseOrInstruction(u16 opcode)
     {
         const auto REG_INDEX = decodeNibble(opcode, 0);
         const auto word = memory->readWord(registers.pc);
-        registers.pc += 2;
         registers.r[REG_INDEX] |= word;
         registers.flags.n = isNegative(registers.r[REG_INDEX]);
         registers.flags.z = isZero(registers.r[REG_INDEX]);
@@ -250,7 +203,6 @@ bool CpuImpl::executeBitwiseOrInstruction(u16 opcode)
     {
         const auto REG_INDEX_X = decodeNibble(opcode, 0);
         const auto REG_INDEX_Y = decodeNibble(opcode, 1);
-        registers.pc += 2;
         registers.r[REG_INDEX_X] |= registers.r[REG_INDEX_Y];
         registers.flags.n = isNegative(registers.r[REG_INDEX_X]);
         registers.flags.z = isZero(registers.r[REG_INDEX_X]);
@@ -260,11 +212,12 @@ bool CpuImpl::executeBitwiseOrInstruction(u16 opcode)
         const auto REG_INDEX_X = decodeNibble(opcode, 0);
         const auto REG_INDEX_Y = decodeNibble(opcode, 1);
         const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
-        registers.pc += 2;
         registers.r[REG_INDEX_Z] = registers.r[REG_INDEX_X] | registers.r[REG_INDEX_Y];
         registers.flags.n = isNegative(registers.r[REG_INDEX_Z]);
         registers.flags.z = isZero(registers.r[REG_INDEX_Z]);
     }
+    registers.pc += 2;
+    return true;
 }
 
 bool CpuImpl::executeStackInstruction(u16 opcode)
@@ -301,7 +254,6 @@ bool CpuImpl::executeStackInstruction(u16 opcode)
     {
         registers.flags.raw = popFromStack() & 0xFF;
     }
-
     registers.pc += 2;
     return true;
 }
