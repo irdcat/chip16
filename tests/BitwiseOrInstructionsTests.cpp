@@ -19,7 +19,7 @@ namespace
         MOCK_CONST_METHOD1(readControllerState, ControllerState(unsigned));
     };
 
-    class BitwiseOrInstructionTests : public ::testing::Test
+    class BitwiseOrInstructionsTests : public ::testing::Test
     {
     protected:
         void SetUp() override
@@ -37,7 +37,7 @@ namespace
     };
 };
 
-TEST_F(BitwiseOrInstructionTests, testOrImmedate_isNegativeUnset)
+TEST_F(BitwiseOrInstructionsTests, testOrImmedate_isNegativeUnset)
 {
     // ORI Rx, $value
     const auto REG_INDEX = 5;
@@ -52,7 +52,7 @@ TEST_F(BitwiseOrInstructionTests, testOrImmedate_isNegativeUnset)
     EXPECT_EQ(0, regs.flags.n);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrImmedate_isNegativeSet)
+TEST_F(BitwiseOrInstructionsTests, testOrImmedate_isNegativeSet)
 {
     // ORI Rx, $value
     const auto REG_INDEX = 5;
@@ -67,7 +67,7 @@ TEST_F(BitwiseOrInstructionTests, testOrImmedate_isNegativeSet)
     EXPECT_EQ(1, regs.flags.n);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrImmedate_isZeroUnset)
+TEST_F(BitwiseOrInstructionsTests, testOrImmedate_isZeroUnset)
 {
     // ORI Rx, $value
     const auto REG_INDEX = 5;
@@ -82,7 +82,7 @@ TEST_F(BitwiseOrInstructionTests, testOrImmedate_isZeroUnset)
     EXPECT_EQ(0, regs.flags.z);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrImmedate_isZeroSet)
+TEST_F(BitwiseOrInstructionsTests, testOrImmedate_isZeroSet)
 {
     // ORI Rx, $value
     const auto REG_INDEX = 5;
@@ -97,7 +97,7 @@ TEST_F(BitwiseOrInstructionTests, testOrImmedate_isZeroSet)
     EXPECT_EQ(1, regs.flags.z);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrRegister_isNegativeUnset)
+TEST_F(BitwiseOrInstructionsTests, testOrRegister_isNegativeUnset)
 {
     // OR Rx, Ry
     const auto REG_INDEX_X = 5;
@@ -114,7 +114,7 @@ TEST_F(BitwiseOrInstructionTests, testOrRegister_isNegativeUnset)
     EXPECT_EQ(0, regs.flags.n);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrRegister_isNegativeSet)
+TEST_F(BitwiseOrInstructionsTests, testOrRegister_isNegativeSet)
 {
     // OR Rx, Ry
     const auto REG_INDEX_X = 5;
@@ -131,7 +131,7 @@ TEST_F(BitwiseOrInstructionTests, testOrRegister_isNegativeSet)
     EXPECT_EQ(1, regs.flags.n);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrRegister_isZeroUnset)
+TEST_F(BitwiseOrInstructionsTests, testOrRegister_isZeroUnset)
 {
     // OR Rx, Ry
     const auto REG_INDEX_X = 5;
@@ -148,7 +148,7 @@ TEST_F(BitwiseOrInstructionTests, testOrRegister_isZeroUnset)
     EXPECT_EQ(0, regs.flags.z);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrRegister_isZeroSet)
+TEST_F(BitwiseOrInstructionsTests, testOrRegister_isZeroSet)
 {
     // OR Rx, Ry
     const auto REG_INDEX_X = 5;
@@ -165,7 +165,7 @@ TEST_F(BitwiseOrInstructionTests, testOrRegister_isZeroSet)
     EXPECT_EQ(1, regs.flags.z);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrRegisters_isNegativeUnset)
+TEST_F(BitwiseOrInstructionsTests, testOrRegisters_isNegativeUnset)
 {
     // OR Rx, Ry, Rz
     const auto REG_INDEX_X = 5;
@@ -184,7 +184,7 @@ TEST_F(BitwiseOrInstructionTests, testOrRegisters_isNegativeUnset)
     EXPECT_EQ(0, regs.flags.n);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrRegisters_isNegativeSet)
+TEST_F(BitwiseOrInstructionsTests, testOrRegisters_isNegativeSet)
 {
     // OR Rx, Ry, Rz
     const auto REG_INDEX_X = 5;
@@ -203,7 +203,7 @@ TEST_F(BitwiseOrInstructionTests, testOrRegisters_isNegativeSet)
     EXPECT_EQ(1, regs.flags.n);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrRegisters_isZeroUnset)
+TEST_F(BitwiseOrInstructionsTests, testOrRegisters_isZeroUnset)
 {
     // OR Rx, Ry, Rz
     const auto REG_INDEX_X = 5;
@@ -222,7 +222,7 @@ TEST_F(BitwiseOrInstructionTests, testOrRegisters_isZeroUnset)
     EXPECT_EQ(0, regs.flags.z);
 }
 
-TEST_F(BitwiseOrInstructionTests, testOrRegisters_isZeroSet)
+TEST_F(BitwiseOrInstructionsTests, testOrRegisters_isZeroSet)
 {
     // OR Rx, Ry, Rz
     const auto REG_INDEX_X = 5;
