@@ -39,6 +39,7 @@ private:
     bool executeJumpInstruction(u16 opcode);      // 1x
     bool executeLoadInstruction(u16 opcode);      // 2x
     bool executeStoreInstruction(u16 opcode);     // 3x
+    bool executeBitwiseAndInstruction(u16 opcode);// 6x
     bool executeBitwiseOrInstruction(u16 opcode); // 7x
     bool executeBitwiseXorInstruction(u16 opcode);// 8x
     bool executeShiftInstruction(u16 opcode);     // Bx
