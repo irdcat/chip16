@@ -9,13 +9,13 @@ MemoryImpl::MemoryImpl()
 
 u8 MemoryImpl::readByte(u16 addr) const
 {
-    LOG.debug("Reading byte from memory at address ", addr);
+    LOG.debug("Reading byte from memory at address ", logHex(addr));
     return memory[addr];
 }
 
 void MemoryImpl::writeByte(u16 addr, u8 byte)
 {
-    LOG.debug("Writing byte ", byte, " into memory at address ", addr);
+    LOG.debug("Writing byte ", logHex(byte), " into memory at address ", logHex(addr));
     memory[addr] = byte;
 }
 
