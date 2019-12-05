@@ -48,6 +48,9 @@ void CpuImpl::executeInstruction(u16 opcode)
     case 0x3:
         result = executeStoreInstruction(opcode);
         break;
+    case 0x6:
+        result = executeBitwiseAndInstruction(opcode);
+        break;
     case 0x7:
         result = executeBitwiseOrInstruction(opcode);
         break;
@@ -199,6 +202,57 @@ bool CpuImpl::executeStoreInstruction(u16 opcode)
         const auto REG_INDEX_Y = decodeNibble(opcode, 1);
         const auto addr = registers.r[REG_INDEX_Y];
         memory->writeWord(addr, registers.r[REG_INDEX_X]);
+    }
+    registers.pc += 2;
+    return true;
+}
+
+bool CpuImpl::executeBitwiseAndInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = decodeNibble(opcode, 2);
+    if (innerInstructionIndex > 4)
+        return false;
+
+    if (innerInstructionIndex == 0)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto word = memory->readWord(registers.pc);
+        registers.r[REG_INDEX] &= word;
+        registers.flags.z = isZero(registers.r[REG_INDEX]);
+        registers.flags.n = isNegative(registers.r[REG_INDEX]);
+    }
+    else if (innerInstructionIndex == 1)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        registers.r[REG_INDEX_X] &= registers.r[REG_INDEX_Y];
+        registers.flags.z = isZero(registers.r[REG_INDEX_X]);
+        registers.flags.n = isNegative(registers.r[REG_INDEX_X]);
+    }
+    else if (innerInstructionIndex == 2)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
+        registers.r[REG_INDEX_Z] = registers.r[REG_INDEX_X] & registers.r[REG_INDEX_Y];
+        registers.flags.z = isZero(registers.r[REG_INDEX_Z]);
+        registers.flags.n = isNegative(registers.r[REG_INDEX_Z]);
+    }
+    else if (innerInstructionIndex == 3)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto word = memory->readWord(registers.pc);
+        const u16 result = registers.r[REG_INDEX] & word;
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+    }
+    else if (innerInstructionIndex == 4)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const u16 result = registers.r[REG_INDEX_X] & registers.r[REG_INDEX_Y];
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
     }
     registers.pc += 2;
     return true;
