@@ -6,6 +6,9 @@
 #include <iomanip>
 #include <chrono>
 #include <ctime>
+#include <mutex>
+
+#include "OutputModificator.hpp"
 
 template <class StreamType>
 class GenericLogger
@@ -35,10 +38,13 @@ private:
     };
 
     template <Severity LogSeverity, typename ...Args>
-    void print(Args ... args);
+    void print(Args ...args);
 
-    template <typename First, typename ... Args>
-    void printImpl(First first, Args ... args);
+    template <typename First, typename ...Args>
+    void printImpl(First first, Args ...args);
+
+    template <typename T, ModificatorType Type, typename ...Args>
+    void printImpl(OutputModificator<T, Type> modificator, Args ...args);
 
     void printImpl();
 
@@ -47,6 +53,7 @@ private:
 
     std::stringstream mStringStream;
     std::string mName;
+    std::mutex writeMutex;
 
     static std::unique_ptr<StreamType> logStream;
 };
@@ -116,7 +123,7 @@ template<class StreamType>
 template<typename GenericLogger<StreamType>::Severity LogSeverity, typename ...Args>
 inline void GenericLogger<StreamType>::print(Args ...args)
 {
-    mStringStream << createHeader();
+    std::lock_guard<std::mutex> lock(writeMutex);
     if constexpr (LogSeverity == Severity::DEBUG)
         mStringStream << " [DEBUG] ";
     else if (LogSeverity == Severity::INFO)
@@ -135,6 +142,20 @@ inline void GenericLogger<StreamType>::printImpl(First first, Args ...args)
 {
     mStringStream << first;
     printImpl(args...);
+}
+
+template<class StreamType>
+template<typename T, ModificatorType Type, typename ...Args>
+inline void GenericLogger<StreamType>::printImpl(OutputModificator<T, Type> modificator, Args ...args)
+{
+    switch (modificator.getType())
+    {
+    case ModificatorType::HEX:
+        mStringStream << std::uppercase << std::hex;
+        break;
+    }
+
+    printImpl(modificator.getValue(), args...);
 }
 
 template<class StreamType>

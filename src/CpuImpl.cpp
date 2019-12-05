@@ -26,14 +26,14 @@ u16 CpuImpl::popFromStack()
 
 void CpuImpl::pushIntoStack(u16 value)
 {
-    LOG.debug("Pushing into stack: ", value);
+    LOG.debug("Pushing into stack: ", logHex(value));
     memory->writeWord(registers.sp, value);
     registers.sp += 2;
 }
 
 void CpuImpl::executeInstruction(u16 opcode)
 {
-    LOG.debug("Executing opcode: ", opcode);
+    LOG.debug("Executing opcode: ", logHex(opcode));
     const auto group = decodeNibble(opcode, 3);
     bool result = false;
 
@@ -66,7 +66,7 @@ void CpuImpl::executeInstruction(u16 opcode)
     }
 
     if (!result) 
-        LOG.error("Unknown opcode: ", opcode);
+        LOG.error("Unknown opcode: ", logHex(opcode));
 }
 
 CpuImpl::Registers& CpuImpl::getRegisters()
