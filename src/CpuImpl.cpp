@@ -54,6 +54,9 @@ void CpuImpl::executeInstruction(u16 opcode)
     case 0x8:
         result = executeBitwiseXorInstruction(opcode);
         break;
+    case 0xB:
+        result = executeShiftInstruction(opcode);
+        break;
     case 0xC:
         result = executeStackInstruction(opcode);
         break;
@@ -87,6 +90,11 @@ bool CpuImpl::executeJumpInstruction(u16 opcode)
     }
     else if (innerInstructionIndex == 2)
     {
+        if (decodeNibble(opcode, 0) == 0xF) 
+        {
+            registers.pc += 2;
+            return false;
+        }
         registers.pc = evaluateBranchCondition(decodeNibble(opcode, 0)) ?
             memory->readWord(registers.pc) : registers.pc + 2;
     }
@@ -111,6 +119,11 @@ bool CpuImpl::executeJumpInstruction(u16 opcode)
     }
     else if (innerInstructionIndex == 7)
     {
+        if (decodeNibble(opcode, 0) == 0xF)
+        {
+            registers.pc += 2;
+            return false;
+        }
         auto addr = memory->readWord(registers.pc);
         bool condition = evaluateBranchCondition(decodeNibble(opcode, 0));
         if(condition)
@@ -261,6 +274,69 @@ bool CpuImpl::executeBitwiseXorInstruction(u16 opcode)
     return true;
 }
 
+bool CpuImpl::executeShiftInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = decodeNibble(opcode, 2);
+    if (innerInstructionIndex > 5)
+        return false;
+
+    if (innerInstructionIndex == 0)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto operand = decodeNibble(memory->readWord(registers.pc), 2);
+        registers.r[REG_INDEX] <<= operand;
+        registers.flags.n = isNegative(registers.r[REG_INDEX]);
+        registers.flags.z = isZero(registers.r[REG_INDEX]);
+    }
+    else if (innerInstructionIndex == 1)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto operand = decodeNibble(memory->readWord(registers.pc), 2);
+        registers.r[REG_INDEX] >>= operand;
+        registers.flags.n = isNegative(registers.r[REG_INDEX]);
+        registers.flags.z = isZero(registers.r[REG_INDEX]);
+    }
+    else if (innerInstructionIndex == 2)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto operand = decodeNibble(memory->readWord(registers.pc), 2);
+        bool msb = registers.r[REG_INDEX] & 0x8000;
+        registers.r[REG_INDEX] = (registers.r[REG_INDEX] >> operand) | (msb << 15);
+        registers.flags.n = isNegative(registers.r[REG_INDEX]);
+        registers.flags.z = isZero(registers.r[REG_INDEX]);
+    }
+    else if (innerInstructionIndex == 3)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto operand = registers.r[REG_INDEX_Y];
+        registers.r[REG_INDEX_X] <<= operand;
+        registers.flags.n = isNegative(registers.r[REG_INDEX_X]);
+        registers.flags.z = isZero(registers.r[REG_INDEX_X]);
+    }
+    else if (innerInstructionIndex == 4)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto operand = registers.r[REG_INDEX_Y];
+        registers.r[REG_INDEX_X] >>= operand;
+        registers.flags.n = isNegative(registers.r[REG_INDEX_X]);
+        registers.flags.z = isZero(registers.r[REG_INDEX_X]);
+    }
+    else if (innerInstructionIndex == 5)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        bool msb = registers.r[REG_INDEX_X] & 0x8000;
+        const auto operand = registers.r[REG_INDEX_Y];
+        registers.r[REG_INDEX_X] = (registers.r[REG_INDEX_X] >> operand) | (msb << 15);
+        registers.flags.n = isNegative(registers.r[REG_INDEX_X]);
+        registers.flags.z = isZero(registers.r[REG_INDEX_X]);
+    }
+    registers.pc += 2;
+    return true;
+}
+
 bool CpuImpl::executeStackInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
@@ -353,7 +429,6 @@ bool CpuImpl::executeNegationInstruction(u16 opcode)
         registers.flags.z = isZero(registers.r[REG_INDEX_X]);
         registers.flags.n = isNegative(registers.r[REG_INDEX_X]);
     }
-
     registers.pc += 2;
     return true;
 }

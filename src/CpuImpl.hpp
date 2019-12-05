@@ -41,6 +41,7 @@ private:
     bool executeStoreInstruction(u16 opcode);     // 3x
     bool executeBitwiseOrInstruction(u16 opcode); // 7x
     bool executeBitwiseXorInstruction(u16 opcode);// 8x
+    bool executeShiftInstruction(u16 opcode);     // Bx
     bool executeStackInstruction(u16 opcode);     // Cx
     bool executeNegationInstruction(u16 opcode);  // Ex
 
