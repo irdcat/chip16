@@ -2,8 +2,9 @@
 
 Logger CpuImpl::LOG(STRINGIFY(CpuImpl));
 
-CpuImpl::CpuImpl(const std::shared_ptr<Memory>& memory)
+CpuImpl::CpuImpl(const std::shared_ptr<Memory>& memory, const std::shared_ptr<Bus>& bus)
     : memory(memory)
+    , bus(bus)
     , registers()
 {
 }
@@ -62,6 +63,9 @@ void CpuImpl::executeInstruction(u16 opcode)
         break;
     case 0xC:
         result = executeStackInstruction(opcode);
+        break;
+    case 0xD:
+        result = executePaletteInstruction(opcode);
         break;
     case 0xE:
         result = executeNegationInstruction(opcode);
@@ -425,6 +429,27 @@ bool CpuImpl::executeStackInstruction(u16 opcode)
     {
         registers.flags.raw = popFromStack() & 0xFF;
     }
+    registers.pc += 2;
+    return true;
+}
+
+bool CpuImpl::executePaletteInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = decodeNibble(opcode, 2);
+    if (innerInstructionIndex > 1)
+        return false;
+
+    u16 addr = innerInstructionIndex == 0 ? 
+        memory->readWord(registers.pc) : registers.r[decodeNibble(opcode, 0)];
+    Palette palette;
+    for (auto i = 0; i < 16; i++)
+    {
+        std::uint32_t color = 0xFF;
+        for (auto j = 0; j < 3; j++)
+            color |= memory->readByte(addr + (i * 3) + j) << ((3 - j) * 8);
+        palette[i] = color;
+    }
+    bus->loadPalette(palette);
     registers.pc += 2;
     return true;
 }
