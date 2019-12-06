@@ -4,6 +4,7 @@
 
 #include "../src/CpuImpl.hpp"
 #include "../src/Memory.hpp"
+#include "../src/Bus.hpp"
 
 namespace
 {
@@ -19,17 +20,24 @@ namespace
         MOCK_CONST_METHOD1(readControllerState, ControllerState(unsigned));
     };
 
+    class BusMock : public Bus
+    {
+    public:
+        MOCK_METHOD1(loadPalette, void(const Palette&));
+    };
+
     class NegationInstructionsTests : public ::testing::Test
     {
     protected:
         void SetUp() override
         {
             memory = std::make_shared<MemoryMock>();
-            testedCpu = std::make_unique<CpuImpl>(memory);
+            testedCpu = std::make_unique<CpuImpl>(memory, bus);
         }
 
         std::unique_ptr<CpuImpl> testedCpu;
         std::shared_ptr<MemoryMock> memory;
+        std::shared_ptr<BusMock> bus;
 
         const u16 NOT_IMMEDATE_INSTRUCTION_OPCODE = 0xE000;
         const u16 NOT_REGISTER_INSTRUCTION_OPCODE = 0xE100;

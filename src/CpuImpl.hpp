@@ -5,6 +5,7 @@
 #include "Cpu.hpp"
 #include "CpuFlags.hpp"
 #include "Memory.hpp"
+#include "Bus.hpp"
 #include "ConditionalBranch.hpp"
 #include "log/Logger.hpp"
 
@@ -13,7 +14,7 @@ class CpuImpl : public Cpu
 public:
 	CpuImpl() = default;
 
-    CpuImpl(const std::shared_ptr<Memory>& memory);
+    CpuImpl(const std::shared_ptr<Memory>& memory, const std::shared_ptr<Bus>& bus);
 
     ~CpuImpl() = default;
 
@@ -44,6 +45,7 @@ private:
     bool executeBitwiseXorInstruction(u16 opcode);// 8x
     bool executeShiftInstruction(u16 opcode);     // Bx
     bool executeStackInstruction(u16 opcode);     // Cx
+    bool executePaletteInstruction(u16 opcode);   // Dx
     bool executeNegationInstruction(u16 opcode);  // Ex
 
     bool evaluateBranchCondition(unsigned index);
@@ -56,6 +58,7 @@ private:
 
     Registers registers;
     std::shared_ptr<Memory> memory;
+    std::shared_ptr<Bus> bus;
 
     static Logger LOG;
 };
