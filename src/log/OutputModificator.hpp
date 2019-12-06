@@ -1,47 +1,21 @@
 #pragma once
 
-enum ModificatorType
-{
-    HEX
-};
+#include <sstream>
 
-template <typename T, ModificatorType Modificator>
-class OutputModificator
+template <typename T>
+class LogModificator
 {
 public:
-    OutputModificator(T value);
+    LogModificator(T value);
 
-    ModificatorType getType() const;
-
-    T getValue() const;
+    virtual void print(std::ostream& os) const = 0;
 
 private:
     T value;
 };
 
-template<typename T, ModificatorType Modificator>
-inline OutputModificator<T, Modificator>::OutputModificator(T value)
+template <typename T>
+LogModificator::LogModificator(T value)
     : value(value)
 {
-}
-
-template<typename T, ModificatorType Modificator>
-inline ModificatorType OutputModificator<T, Modificator>::getType() const
-{
-    return Modificator;
-}
-
-template<typename T, ModificatorType Modificator>
-inline T OutputModificator<T, Modificator>::getValue() const
-{
-    return value;
-}
-
-template <typename T>
-using HexModificator = OutputModificator<T, ModificatorType::HEX>;
-
-template <typename T>
-inline HexModificator<T> logHex(T value)
-{
-    return HexModificator<T>(value);
 }

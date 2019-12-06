@@ -5,6 +5,7 @@
 
 #include "Memory.hpp"
 #include "log/Logger.hpp"
+#include "log/HexModificator.hpp"
 
 class MemoryImpl : public Memory
 {

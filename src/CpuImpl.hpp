@@ -8,6 +8,7 @@
 #include "Bus.hpp"
 #include "ConditionalBranch.hpp"
 #include "log/Logger.hpp"
+#include "log/HexModificator.hpp"
 
 class CpuImpl : public Cpu
 {

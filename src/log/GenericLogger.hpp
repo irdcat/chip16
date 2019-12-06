@@ -8,7 +8,7 @@
 #include <ctime>
 #include <mutex>
 
-#include "OutputModificator.hpp"
+#include "LogModificator.hpp"
 
 template <class StreamType>
 class GenericLogger
@@ -43,8 +43,8 @@ private:
     template <typename First, typename ...Args>
     void printImpl(First first, Args ...args);
 
-    template <typename T, ModificatorType Type, typename ...Args>
-    void printImpl(OutputModificator<T, Type> modificator, Args ...args);
+    template <typename T, typename ...Args>
+    void printImpl(const std::shared_ptr<LogModificator<T>>& modificator, Args ...args);
 
     void printImpl();
 
@@ -145,17 +145,11 @@ inline void GenericLogger<StreamType>::printImpl(First first, Args ...args)
 }
 
 template<class StreamType>
-template<typename T, ModificatorType Type, typename ...Args>
-inline void GenericLogger<StreamType>::printImpl(OutputModificator<T, Type> modificator, Args ...args)
+template<typename T, typename ...Args>
+inline void GenericLogger<StreamType>::printImpl(const std::shared_ptr<LogModificator<T>>& modificator, Args ...args)
 {
-    switch (modificator.getType())
-    {
-    case ModificatorType::HEX:
-        mStringStream << std::uppercase << std::hex;
-        break;
-    }
-
-    printImpl(modificator.getValue(), args...);
+    modificator->apply(mStringStream);
+    printImpl(args...);
 }
 
 template<class StreamType>
