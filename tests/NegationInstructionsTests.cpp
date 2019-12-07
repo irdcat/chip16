@@ -18,12 +18,19 @@ namespace
         MOCK_CONST_METHOD1(readWord, u16(u16));
         MOCK_METHOD2(writeWord, void(u16, u16));
         MOCK_CONST_METHOD1(readControllerState, ControllerState(unsigned));
+        MOCK_CONST_METHOD1(readByteReference, std::vector<u8>::const_iterator(u16));
     };
 
     class BusMock : public Bus
     {
     public:
         MOCK_METHOD1(loadPalette, void(const Palette&));
+        MOCK_METHOD0(clearScreen, void());
+        MOCK_METHOD1(setBackgroundColorIndex, void(u8));
+        MOCK_METHOD2(setSpriteDimensions, void(u8, u8));
+        MOCK_METHOD3(drawSprite, bool(u16, u16, std::vector<u8>::const_iterator));
+        MOCK_METHOD1(setHFlip, void(bool));
+        MOCK_METHOD1(setVFlip, void(bool));
     };
 
     class NegationInstructionsTests : public ::testing::Test
@@ -32,6 +39,7 @@ namespace
         void SetUp() override
         {
             memory = std::make_shared<MemoryMock>();
+            bus = std::make_shared<BusMock>();
             testedCpu = std::make_unique<CpuImpl>(memory, bus);
         }
 

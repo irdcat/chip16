@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include "Types.hpp"
 #include "ControllerState.hpp"
 
@@ -47,4 +48,12 @@ public:
      * @return Controller state.
      */
     virtual ControllerState readControllerState(unsigned index) const = 0;
+
+    /**
+     * Reads reference to byte from memory at given address.
+     *
+     * @oaram addr Address of the memory to read reference from.
+     * @return Reference to byte from memory.
+     */
+    virtual std::vector<u8>::const_iterator readByteReference(u16 addr) const = 0;
 };

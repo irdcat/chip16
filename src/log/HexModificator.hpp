@@ -9,7 +9,7 @@ template<typename T>
 class HexModificator : public LogModificator<T>
 {
 public:
-    static_assert(std::is_integral_v<T>, "Type of T must be integral type!");
+    static_assert(std::is_integral_v<T>, "Type of T must be integral!");
 
     HexModificator(T value);
 

@@ -38,6 +38,7 @@ public:
     Registers& getRegisters();
 
 private:
+    bool executeMiscInstruction(u16 opcode);      // 0x
     bool executeJumpInstruction(u16 opcode);      // 1x
     bool executeLoadInstruction(u16 opcode);      // 2x
     bool executeStoreInstruction(u16 opcode);     // 3x
