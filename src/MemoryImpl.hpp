@@ -24,6 +24,8 @@ public:
 
     ControllerState readControllerState(unsigned index) const override;
     
+    std::vector<u8>::const_iterator readByteReference(u16 addr) const override;
+
     template <typename T, typename ...Args>
     void writeData(u16 startPos, T data, Args ...args);
 

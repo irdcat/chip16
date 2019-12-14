@@ -40,6 +40,9 @@ void CpuImpl::executeInstruction(u16 opcode)
 
     switch (group)
     {
+    case 0x0:
+        result = executeMiscInstruction(opcode);
+        break;
     case 0x1: 
         result = executeJumpInstruction(opcode); 
         break;
@@ -79,6 +82,93 @@ void CpuImpl::executeInstruction(u16 opcode)
 CpuImpl::Registers& CpuImpl::getRegisters()
 {
     return registers;
+}
+
+bool CpuImpl::executeMiscInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = decodeNibble(opcode, 2);
+    if (innerInstructionIndex > 0xE)
+        return false;
+
+    if (innerInstructionIndex == 0)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 1)
+    {
+        bus->clearScreen();
+    }
+    else if (innerInstructionIndex == 2)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 3)
+    {
+        const auto COLOR_INDEX = decodeNibble(memory->readWord(registers.pc), 2);
+        bus->setBackgroundColorIndex(COLOR_INDEX);
+    }
+    else if (innerInstructionIndex == 4)
+    {
+        const auto word = memory->readWord(registers.pc);
+        const auto WIDTH = (word >> 8) & 0xFF;
+        const auto HEIGHT = word & 0xFF;
+        bus->setSpriteDimensions(WIDTH, HEIGHT);
+    }
+    else if (innerInstructionIndex == 5)
+    {
+        const auto POS_X = registers.r[decodeNibble(opcode, 0)];
+        const auto POS_Y = registers.r[decodeNibble(opcode, 1)];
+        const auto addr = memory->readWord(registers.pc);
+        registers.flags.c = bus->drawSprite(POS_X, POS_Y, memory->readByteReference(addr));
+    }
+    else if (innerInstructionIndex == 6)
+    {
+        const auto POS_X = registers.r[decodeNibble(opcode, 0)];
+        const auto POS_Y = registers.r[decodeNibble(opcode, 1)];
+        const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
+        const auto addr = registers.r[REG_INDEX_Z];
+        registers.flags.c = bus->drawSprite(POS_X, POS_Y, memory->readByteReference(addr));
+    }
+    else if (innerInstructionIndex == 7)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 8)
+    {
+        const auto flipFlags = memory->readWord(registers.pc) & 0x3;
+        bus->setHFlip(flipFlags & 0x2);
+        bus->setVFlip(flipFlags & 0x1);
+    }
+    else if (innerInstructionIndex == 9)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 9)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 0xA)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 0xB)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 0xC)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 0xD)
+    {
+        // TODO: Implement instruction
+    }
+    else if (innerInstructionIndex == 0xE)
+    {
+        // TODO: Implement instruction
+    }
+    registers.pc += 2;
+    return true;
 }
 
 bool CpuImpl::executeJumpInstruction(u16 opcode)

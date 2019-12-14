@@ -40,3 +40,9 @@ ControllerState MemoryImpl::readControllerState(unsigned index) const
     state.raw = rawStateValue;
     return state;
 }
+
+std::vector<u8>::const_iterator MemoryImpl::readByteReference(u16 addr) const
+{
+    LOG.debug("Reading reference from memory at address ", logHex(addr));
+    return memory.begin() + addr;
+}
