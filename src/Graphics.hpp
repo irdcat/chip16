@@ -85,4 +85,11 @@ public:
      * @param flip Vertical flip value.
      */
     virtual void setVFlip(bool flip) = 0;
+
+    /**
+     * Returns VBlank flag status.
+     *
+     * @return True or false depending on VBlank status.
+     */
+    virtual bool isVBlank() const = 0;
 };

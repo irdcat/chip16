@@ -24,6 +24,7 @@ namespace
         MOCK_METHOD3(drawSprite, bool(u16, u16, std::vector<u8>::const_iterator));
         MOCK_METHOD1(setHFlip, void(bool));
         MOCK_METHOD1(setVFlip, void(bool));
+        MOCK_CONST_METHOD0(isVBlank, bool());
     };
 
     class BusImplTests : public ::testing::Test
@@ -95,4 +96,10 @@ TEST_F(BusImplTests, testSetHorizontalFlip)
 {
     EXPECT_CALL(*graphics, setHFlip(true)).Times(1);
     testedBus->setHFlip(true);
+}
+
+TEST_F(BusImplTests, testIsVblank)
+{
+    EXPECT_CALL(*graphics, isVBlank).Times(1);
+    testedBus->isVBlank();
 }

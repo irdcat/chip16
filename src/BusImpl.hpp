@@ -27,6 +27,8 @@ public:
 
     void setVFlip(bool flip) override;
 
+    bool isVBlank() const override;
+
 private:
     std::shared_ptr<Graphics> graphics;
 

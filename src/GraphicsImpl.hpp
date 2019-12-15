@@ -34,6 +34,8 @@ public:
 
     void setVFlip(bool flip) override;
 
+    bool isVBlank() const override;
+
     struct Registers
     {
         u8 bg;
@@ -42,6 +44,7 @@ public:
         bool hflip;
         bool vflip;
     };
+    bool vblank;
     Registers& getRegisters();
 
 private:
