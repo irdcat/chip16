@@ -9,6 +9,7 @@
 #include "ConditionalBranch.hpp"
 #include "log/Logger.hpp"
 #include "log/HexModificator.hpp"
+#include "utils/Random.hpp"
 
 class CpuImpl : public Cpu
 {

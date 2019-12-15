@@ -167,6 +167,11 @@ void GraphicsImpl::setVFlip(bool flip)
     registers.vflip = flip;
 }
 
+bool GraphicsImpl::isVBlank() const
+{
+    return vblank;
+}
+
 GraphicsImpl::Registers& GraphicsImpl::getRegisters()
 {
     return registers;

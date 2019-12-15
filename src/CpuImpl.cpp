@@ -92,7 +92,7 @@ bool CpuImpl::executeMiscInstruction(u16 opcode)
 
     if (innerInstructionIndex == 0)
     {
-        // TODO: Implement instruction
+        // NOP
     }
     else if (innerInstructionIndex == 1)
     {
@@ -100,7 +100,8 @@ bool CpuImpl::executeMiscInstruction(u16 opcode)
     }
     else if (innerInstructionIndex == 2)
     {
-        // TODO: Implement instruction
+        if (!bus->isVBlank())
+            registers.pc -= 4;
     }
     else if (innerInstructionIndex == 3)
     {
@@ -131,7 +132,9 @@ bool CpuImpl::executeMiscInstruction(u16 opcode)
     }
     else if (innerInstructionIndex == 7)
     {
-        // TODO: Implement instruction
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto max = memory->readWord(registers.pc);
+        registers.r[REG_INDEX] = Random::get(u16(0), max);
     }
     else if (innerInstructionIndex == 8)
     {

@@ -42,3 +42,8 @@ void BusImpl::setVFlip(bool flip)
 {
     graphics->setVFlip(flip);
 }
+
+bool BusImpl::isVBlank() const
+{
+    return graphics->isVBlank();
+}

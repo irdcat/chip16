@@ -34,7 +34,7 @@ namespace
         MOCK_CONST_METHOD0(isVBlank, bool());
     };
 
-    class StoreInstructionsTests : public ::testing::Test
+    class TimingInstructionsTests : public ::testing::Test
     {
     protected:
         void SetUp() override
@@ -48,33 +48,33 @@ namespace
         std::shared_ptr<MemoryMock> memory;
         std::shared_ptr<BusMock> bus;
 
-        const u16 STORE_INDIRECT_INSTRUCTION_OPCODE = 0x3000;
-        const u16 STORE_INDEXED_INSTRUCTION_OPCODE = 0x3100;
+        const u16 NOP_INSTRUCTION_OPCODE = 0x0000;
+        const u16 VBLNK_INSTRUCTION_OPCODE = 0x0200;
     };
 };
 
-TEST_F(StoreInstructionsTests, storeIndirectTest)
+TEST_F(TimingInstructionsTests, testNop)
 {
-    // STM Rx, addr
-    const auto REG_INDEX = 5;
     auto& regs = testedCpu->getRegisters();
     regs.pc = 0x102;
-    regs.r[REG_INDEX] = 0x9876;
-    EXPECT_CALL(*memory, readWord(0x102)).Times(1).WillOnce(Return(0x5555));
-    EXPECT_CALL(*memory, writeWord(0x5555, 0x9876)).Times(1);
-    testedCpu->executeInstruction(STORE_INDIRECT_INSTRUCTION_OPCODE + REG_INDEX);
+    testedCpu->executeInstruction(NOP_INSTRUCTION_OPCODE);
+    EXPECT_EQ(0x104, regs.pc);
 }
 
-TEST_F(StoreInstructionsTests, storeIndexedTest)
+TEST_F(TimingInstructionsTests, testVBlnk_vBlankNotSet)
 {
-    // STM Rx, Ry
-    const auto REG_INDEX_X = 5;
-    const auto REG_INDEX_Y = 7;
     auto& regs = testedCpu->getRegisters();
     regs.pc = 0x102;
-    regs.r[REG_INDEX_X] = 0x9876;
-    regs.r[REG_INDEX_Y] = 0x5555;
-    EXPECT_CALL(*memory, writeWord(0x5555, 0x9876)).Times(1);
-    testedCpu->executeInstruction(STORE_INDEXED_INSTRUCTION_OPCODE
-        + REG_INDEX_X + (REG_INDEX_Y << 4));
+    EXPECT_CALL(*bus, isVBlank).Times(1).WillOnce(Return(false));
+    testedCpu->executeInstruction(VBLNK_INSTRUCTION_OPCODE);
+    EXPECT_EQ(0x100, regs.pc);
+}
+
+TEST_F(TimingInstructionsTests, testVBlnk_vBlankSet)
+{
+    auto& regs = testedCpu->getRegisters();
+    regs.pc = 0x102;
+    EXPECT_CALL(*bus, isVBlank).Times(1).WillOnce(Return(true));
+    testedCpu->executeInstruction(VBLNK_INSTRUCTION_OPCODE);
+    EXPECT_EQ(0x104, regs.pc);
 }
