@@ -43,6 +43,7 @@ private:
     bool executeJumpInstruction(u16 opcode);      // 1x
     bool executeLoadInstruction(u16 opcode);      // 2x
     bool executeStoreInstruction(u16 opcode);     // 3x
+    bool executeAdditionInstruction(u16 opcode);  // 4x
     bool executeBitwiseAndInstruction(u16 opcode);// 6x
     bool executeBitwiseOrInstruction(u16 opcode); // 7x
     bool executeBitwiseXorInstruction(u16 opcode);// 8x
@@ -54,8 +55,11 @@ private:
     bool evaluateBranchCondition(unsigned index);
     unsigned decodeNibble(u16 word, unsigned nibblePos);
 
-    bool isZero(unsigned data);
-    bool isNegative(unsigned data);
+    bool isZero(unsigned data) const;
+    bool isNegative(unsigned data) const;
+
+    bool isAdditionCarry(unsigned data) const;
+    bool isAdditionOverflow(unsigned operand1, unsigned operand2, unsigned result) const;
 
     u16 negate(u16 word);
 

@@ -52,6 +52,9 @@ void CpuImpl::executeInstruction(u16 opcode)
     case 0x3:
         result = executeStoreInstruction(opcode);
         break;
+    case 0x4:
+        result = executeAdditionInstruction(opcode);
+        break;
     case 0x6:
         result = executeBitwiseAndInstruction(opcode);
         break;
@@ -299,6 +302,55 @@ bool CpuImpl::executeStoreInstruction(u16 opcode)
         const auto REG_INDEX_Y = decodeNibble(opcode, 1);
         const auto addr = registers.r[REG_INDEX_Y];
         memory->writeWord(addr, registers.r[REG_INDEX_X]);
+    }
+    registers.pc += 2;
+    return true;
+}
+
+bool CpuImpl::executeAdditionInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = decodeNibble(opcode, 2);
+    if (innerInstructionIndex > 2)
+        return false;
+
+    if (innerInstructionIndex == 0)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const unsigned operand1 = memory->readWord(registers.pc);
+        const unsigned operand2 = registers.r[REG_INDEX];
+        const unsigned result = operand1 + operand2;
+        registers.flags.c = isAdditionCarry(result);
+        registers.flags.n = isNegative(result);
+        registers.flags.z = isZero(result);
+        registers.flags.o = isAdditionOverflow(operand1, operand2, result);
+        registers.r[REG_INDEX] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 1)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const unsigned operand1 = registers.r[REG_INDEX_X];
+        const unsigned operand2 = registers.r[REG_INDEX_Y];
+        const unsigned result = operand1 + operand2;
+        registers.flags.c = isAdditionCarry(result);
+        registers.flags.n = isNegative(result);
+        registers.flags.z = isZero(result);
+        registers.flags.o = isAdditionOverflow(operand1, operand2, result);
+        registers.r[REG_INDEX_X] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 2)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
+        const unsigned operand1 = registers.r[REG_INDEX_X];
+        const unsigned operand2 = registers.r[REG_INDEX_Y];
+        const unsigned result = operand1 + operand2;
+        registers.flags.c = isAdditionCarry(result);
+        registers.flags.n = isNegative(result);
+        registers.flags.z = isZero(result);
+        registers.flags.o = isAdditionOverflow(operand1, operand2, result);
+        registers.r[REG_INDEX_Z] = result & 0xFFFF;
     }
     registers.pc += 2;
     return true;
@@ -660,14 +712,25 @@ unsigned CpuImpl::decodeNibble(u16 word, unsigned nibblePos)
     }
 }
 
-bool CpuImpl::isZero(unsigned data)
+bool CpuImpl::isZero(unsigned data) const
 {
     return (data & 0xFFFF) == 0;
 }
 
-bool CpuImpl::isNegative(unsigned data)
+bool CpuImpl::isNegative(unsigned data) const
 {
-    return (data >> 15) == 1;
+    return (data >> 15) & 1;
+}
+
+bool CpuImpl::isAdditionCarry(unsigned data) const
+{
+    return (data >> 16) & 1;
+}
+
+bool CpuImpl::isAdditionOverflow(unsigned operand1, unsigned operand2, unsigned result) const
+{
+    return (isNegative(operand1) && isNegative(operand2) && !isNegative(result))
+        || (!isNegative(operand1) && !isNegative(operand2) && isNegative(result));
 }
 
 u16 CpuImpl::negate(u16 word)
