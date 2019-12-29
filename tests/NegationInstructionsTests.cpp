@@ -252,7 +252,7 @@ TEST_F(NegationInstructionsTests, testNegateImmedate_isNegativeUnset)
     regs.flags.n = 1;
     EXPECT_CALL(*memory, readWord(0x102)).Times(1).WillOnce(Return(0x80FF));
     testedCpu->executeInstruction(NEG_IMMEDATE_INSTRUCTION_OPCODE + REG_INDEX);
-    EXPECT_EQ(0xFF, regs.r[REG_INDEX]);
+    EXPECT_EQ(0x7F01, regs.r[REG_INDEX]);
     EXPECT_EQ(0, regs.flags.n);
 }
 
@@ -267,7 +267,7 @@ TEST_F(NegationInstructionsTests, testNegateImmedate_isNegativeSet)
     regs.flags.n = 1;
     EXPECT_CALL(*memory, readWord(0x102)).Times(1).WillOnce(Return(0xFF));
     testedCpu->executeInstruction(NEG_IMMEDATE_INSTRUCTION_OPCODE + REG_INDEX);
-    EXPECT_EQ(0x80FF, regs.r[REG_INDEX]);
+    EXPECT_EQ(0xFF01, regs.r[REG_INDEX]);
     EXPECT_EQ(1, regs.flags.n);
 }
 
@@ -282,7 +282,7 @@ TEST_F(NegationInstructionsTests, testNegateImmedate_isZeroUnset)
     regs.flags.n = 1;
     EXPECT_CALL(*memory, readWord(0x102)).Times(1).WillOnce(Return(0x80FF));
     testedCpu->executeInstruction(NEG_IMMEDATE_INSTRUCTION_OPCODE + REG_INDEX);
-    EXPECT_EQ(0xFF, regs.r[REG_INDEX]);
+    EXPECT_EQ(0x7F01, regs.r[REG_INDEX]);
     EXPECT_EQ(0, regs.flags.z);
 }
 
@@ -311,7 +311,7 @@ TEST_F(NegationInstructionsTests, testNegateRegister_isNegativeUnset)
     regs.flags.z = 0;
     regs.flags.n = 1;
     testedCpu->executeInstruction(NEG_REGISTER_INSTRUCTION_OPCODE + REG_INDEX);
-    EXPECT_EQ(0xFF, regs.r[REG_INDEX]);
+    EXPECT_EQ(0x7F01, regs.r[REG_INDEX]);
     EXPECT_EQ(0, regs.flags.n);
 }
 
@@ -325,7 +325,7 @@ TEST_F(NegationInstructionsTests, testNegateRegister_isNegativeSet)
     regs.flags.z = 0;
     regs.flags.n = 1;
     testedCpu->executeInstruction(NEG_REGISTER_INSTRUCTION_OPCODE + REG_INDEX);
-    EXPECT_EQ(0x80FF, regs.r[REG_INDEX]);
+    EXPECT_EQ(0xFF01, regs.r[REG_INDEX]);
     EXPECT_EQ(1, regs.flags.n);
 }
 
@@ -339,7 +339,7 @@ TEST_F(NegationInstructionsTests, testNegateRegister_isZeroUnset)
     regs.flags.z = 1;
     regs.flags.n = 1;
     testedCpu->executeInstruction(NEG_REGISTER_INSTRUCTION_OPCODE + REG_INDEX);
-    EXPECT_EQ(0xFF, regs.r[REG_INDEX]);
+    EXPECT_EQ(0x7F01, regs.r[REG_INDEX]);
     EXPECT_EQ(0, regs.flags.z);
 }
 
@@ -370,7 +370,7 @@ TEST_F(NegationInstructionsTests, testNegateRegisterIndirect_isNegativeUnset)
     regs.flags.n = 1;
     testedCpu->executeInstruction(NEG_REGISTER_INDIRECT_INSTRUCTION_OPCODE
         + REG_INDEX_X + (REG_INDEX_Y << 4));
-    EXPECT_EQ(0xFF, regs.r[REG_INDEX_X]);
+    EXPECT_EQ(0x7F01, regs.r[REG_INDEX_X]);
     EXPECT_EQ(0, regs.flags.n);
 }
 
@@ -387,7 +387,7 @@ TEST_F(NegationInstructionsTests, testNegateRegisterIndirect_isNegativeSet)
     regs.flags.n = 1;
     testedCpu->executeInstruction(NEG_REGISTER_INDIRECT_INSTRUCTION_OPCODE
         + REG_INDEX_X + (REG_INDEX_Y << 4));
-    EXPECT_EQ(0x80FF, regs.r[REG_INDEX_X]);
+    EXPECT_EQ(0xFF01, regs.r[REG_INDEX_X]);
     EXPECT_EQ(1, regs.flags.n);
 }
 
@@ -404,7 +404,7 @@ TEST_F(NegationInstructionsTests, testNegateRegisterIndirect_isZeroUnset)
     regs.flags.n = 1;
     testedCpu->executeInstruction(NEG_REGISTER_INDIRECT_INSTRUCTION_OPCODE
         + REG_INDEX_X + (REG_INDEX_Y << 4));
-    EXPECT_EQ(0x80FF, regs.r[REG_INDEX_X]);
+    EXPECT_EQ(0xFF01, regs.r[REG_INDEX_X]);
     EXPECT_EQ(0, regs.flags.z);
 }
 

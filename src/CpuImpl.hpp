@@ -39,18 +39,19 @@ public:
     Registers& getRegisters();
 
 private:
-    bool executeMiscInstruction(u16 opcode);      // 0x
-    bool executeJumpInstruction(u16 opcode);      // 1x
-    bool executeLoadInstruction(u16 opcode);      // 2x
-    bool executeStoreInstruction(u16 opcode);     // 3x
-    bool executeAdditionInstruction(u16 opcode);  // 4x
-    bool executeBitwiseAndInstruction(u16 opcode);// 6x
-    bool executeBitwiseOrInstruction(u16 opcode); // 7x
-    bool executeBitwiseXorInstruction(u16 opcode);// 8x
-    bool executeShiftInstruction(u16 opcode);     // Bx
-    bool executeStackInstruction(u16 opcode);     // Cx
-    bool executePaletteInstruction(u16 opcode);   // Dx
-    bool executeNegationInstruction(u16 opcode);  // Ex
+    bool executeMiscInstruction(u16 opcode);       // 0x
+    bool executeJumpInstruction(u16 opcode);       // 1x
+    bool executeLoadInstruction(u16 opcode);       // 2x
+    bool executeStoreInstruction(u16 opcode);      // 3x
+    bool executeAdditionInstruction(u16 opcode);   // 4x
+    bool executeSubtractionInstruction(u16 opcode);// 5x
+    bool executeBitwiseAndInstruction(u16 opcode); // 6x
+    bool executeBitwiseOrInstruction(u16 opcode);  // 7x
+    bool executeBitwiseXorInstruction(u16 opcode); // 8x
+    bool executeShiftInstruction(u16 opcode);      // Bx
+    bool executeStackInstruction(u16 opcode);      // Cx
+    bool executePaletteInstruction(u16 opcode);    // Dx
+    bool executeNegationInstruction(u16 opcode);   // Ex
 
     bool evaluateBranchCondition(unsigned index);
     unsigned decodeNibble(u16 word, unsigned nibblePos);
@@ -61,6 +62,9 @@ private:
     bool isAdditionCarry(unsigned data) const;
     bool isAdditionOverflow(unsigned operand1, unsigned operand2, unsigned result) const;
 
+    bool isSubtractionBorrow(unsigned result) const;
+    bool isSubtractionOverflow(unsigned operand1, unsigned operand2, unsigned result) const;
+        
     u16 negate(u16 word);
 
     Registers registers;
