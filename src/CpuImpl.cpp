@@ -55,6 +55,9 @@ void CpuImpl::executeInstruction(u16 opcode)
     case 0x4:
         result = executeAdditionInstruction(opcode);
         break;
+    case 0x5:
+        result = executeSubtractionInstruction(opcode);
+        break;
     case 0x6:
         result = executeBitwiseAndInstruction(opcode);
         break;
@@ -351,6 +354,78 @@ bool CpuImpl::executeAdditionInstruction(u16 opcode)
         registers.flags.z = isZero(result);
         registers.flags.o = isAdditionOverflow(operand1, operand2, result);
         registers.r[REG_INDEX_Z] = result & 0xFFFF;
+    }
+    registers.pc += 2;
+    return true;
+}
+
+bool CpuImpl::executeSubtractionInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = decodeNibble(opcode, 2);
+    if (innerInstructionIndex > 4)
+        return false;
+
+    if (innerInstructionIndex == 0)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const unsigned operand1 = registers.r[REG_INDEX];
+        const unsigned operand2 = memory->readWord(registers.pc);
+        const unsigned result = operand1 + negate(operand2);
+        registers.flags.c = isSubtractionBorrow(result);
+        registers.flags.n = isNegative(result);
+        registers.flags.z = isZero(result);
+        registers.flags.o = isSubtractionOverflow(operand1, operand2, result);
+        registers.r[REG_INDEX] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 1)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const unsigned operand1 = registers.r[REG_INDEX_X];
+        const unsigned operand2 = registers.r[REG_INDEX_Y];
+        const unsigned result = operand1 + negate(operand2);
+        registers.flags.c = isSubtractionBorrow(result);
+        registers.flags.n = isNegative(result);
+        registers.flags.z = isZero(result);
+        registers.flags.o = isSubtractionOverflow(operand1, operand2, result);
+        registers.r[REG_INDEX_X] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 2)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
+        const unsigned operand1 = registers.r[REG_INDEX_X];
+        const unsigned operand2 = registers.r[REG_INDEX_Y];
+        const unsigned result = operand1 + negate(operand2);
+        registers.flags.c = isSubtractionBorrow(result);
+        registers.flags.n = isNegative(result);
+        registers.flags.z = isZero(result);
+        registers.flags.o = isSubtractionOverflow(operand1, operand2, result);
+        registers.r[REG_INDEX_Z] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 3)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const unsigned operand1 = registers.r[REG_INDEX];
+        const unsigned operand2 = memory->readWord(registers.pc);
+        const unsigned result = operand1 + negate(operand2);
+        registers.flags.c = isSubtractionBorrow(result);
+        registers.flags.n = isNegative(result);
+        registers.flags.z = isZero(result);
+        registers.flags.o = isSubtractionOverflow(operand1, operand2, result);
+    }
+    else if (innerInstructionIndex == 4)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const unsigned operand1 = registers.r[REG_INDEX_X];
+        const unsigned operand2 = registers.r[REG_INDEX_Y];
+        const unsigned result = operand1 + negate(operand2);
+        registers.flags.c = isSubtractionBorrow(result);
+        registers.flags.n = isNegative(result);
+        registers.flags.z = isZero(result);
+        registers.flags.o = isSubtractionOverflow(operand1, operand2, result);
     }
     registers.pc += 2;
     return true;
@@ -733,7 +808,18 @@ bool CpuImpl::isAdditionOverflow(unsigned operand1, unsigned operand2, unsigned 
         || (!isNegative(operand1) && !isNegative(operand2) && isNegative(result));
 }
 
+bool CpuImpl::isSubtractionBorrow(unsigned result) const
+{
+    return !((result >> 16) & 1);
+}
+
+bool CpuImpl::isSubtractionOverflow(unsigned operand1, unsigned operand2, unsigned result) const
+{
+    return (!isNegative(result) && isNegative(operand1) && !isNegative(operand2))
+        || (isNegative(result) && !isNegative(operand1) && isNegative(operand2));
+}
+
 u16 CpuImpl::negate(u16 word)
 {
-    return word == 0 ? word : word ^ (1 << 15);
+    return static_cast<u16>(-static_cast<s16>(word));
 }
