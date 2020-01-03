@@ -70,6 +70,9 @@ void CpuImpl::executeInstruction(u16 opcode)
     case 0x9:
         result = executeMultiplicationInstruction(opcode);
         break;
+    case 0xA:
+        result = executeDivisionInstruction(opcode);
+        break;
     case 0xB:
         result = executeShiftInstruction(opcode);
         break;
@@ -601,6 +604,125 @@ bool CpuImpl::executeMultiplicationInstruction(u16 opcode)
     return true;
 }
 
+bool CpuImpl::executeDivisionInstruction(u16 opcode)
+{
+    const auto innerInstructionIndex = decodeNibble(opcode, 2);
+    if (innerInstructionIndex > 8)
+        return false;
+
+    auto rem = [](const auto operand1, const auto operand2) {
+        return operand1 % operand2;
+    };
+    auto mod = [](const auto operand1, const auto operand2) {
+        return ((operand1 % operand2) + operand2) % operand2;
+    };
+
+    if (innerInstructionIndex == 0)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX]);
+        const auto operand2 = static_cast<s16>(memory->readWord(registers.pc));
+        const unsigned result = static_cast<u32>(operand1 / operand2);
+        registers.flags.c = isDivisionCarry(operand1, operand2);
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 1)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX_X]);
+        const auto operand2 = static_cast<s16>(registers.r[REG_INDEX_Y]);
+        const unsigned result = static_cast<u32>(operand1 / operand2);
+        registers.flags.c = isDivisionCarry(operand1, operand2);
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX_X] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 2)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX_X]);
+        const auto operand2 = static_cast<s16>(registers.r[REG_INDEX_Y]);
+        const unsigned result = static_cast<u32>(operand1 / operand2);
+        registers.flags.c = isDivisionCarry(operand1, operand2);
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX_Z] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 3)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX]);
+        const auto operand2 = static_cast<s16>(memory->readWord(registers.pc));
+        const unsigned result = static_cast<u32>(mod(operand1, operand2));
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 4)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX_X]);
+        const auto operand2 = static_cast<s16>(registers.r[REG_INDEX_Y]);
+        const unsigned result = static_cast<u32>(mod(operand1, operand2));
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX_X] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 5)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX_X]);
+        const auto operand2 = static_cast<s16>(registers.r[REG_INDEX_Y]);
+        const unsigned result = static_cast<u32>(mod(operand1, operand2));
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX_Z] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 6)
+    {
+        const auto REG_INDEX = decodeNibble(opcode, 0);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX]);
+        const auto operand2 = static_cast<s16>(memory->readWord(registers.pc));
+        const unsigned result = static_cast<u32>(rem(operand1, operand2));
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 7)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX_X]);
+        const auto operand2 = static_cast<s16>(registers.r[REG_INDEX_Y]);
+        const unsigned result = static_cast<u32>(rem(operand1, operand2));
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX_X] = result & 0xFFFF;
+    }
+    else if (innerInstructionIndex == 8)
+    {
+        const auto REG_INDEX_X = decodeNibble(opcode, 0);
+        const auto REG_INDEX_Y = decodeNibble(opcode, 1);
+        const auto REG_INDEX_Z = decodeNibble(memory->readWord(registers.pc), 2);
+        const auto operand1 = static_cast<s16>(registers.r[REG_INDEX_X]);
+        const auto operand2 = static_cast<s16>(registers.r[REG_INDEX_Y]);
+        const unsigned result = static_cast<u32>(rem(operand1, operand2));
+        registers.flags.z = isZero(result);
+        registers.flags.n = isNegative(result);
+        registers.r[REG_INDEX_Z] = result & 0xFFFF;
+    }
+    registers.pc += 2;
+    return true;
+}
+
 bool CpuImpl::executeShiftInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
@@ -871,6 +993,11 @@ bool CpuImpl::isSubtractionOverflow(unsigned operand1, unsigned operand2, unsign
 bool CpuImpl::isMultiplicationCarry(unsigned result) const
 {
     return result > UINT16_MAX;
+}
+
+bool CpuImpl::isDivisionCarry(unsigned operand1, unsigned operand2) const
+{
+    return !!(operand1 % operand2);
 }
 
 u16 CpuImpl::negate(u16 word)

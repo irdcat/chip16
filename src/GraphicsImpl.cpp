@@ -6,13 +6,13 @@ GraphicsImpl::GraphicsImpl()
     : buffer(SCREEN_WIDTH * SCREEN_HEIGHT / PIXELS_PER_BYTE)
     , palette()
     , registers()
+    , vblank(false)
 {
 }
 
 void GraphicsImpl::initPalette()
 {
     LOG.debug("Initializing default palette");
-    // Default palette
     static const Palette defaultPalette = {
         0x00000000, 0x000000FF, 0x888888FF, 0xBF3932FF,
         0xDE7AAEFF, 0x4C3D21FF, 0x905F25FF, 0xE49452FF,

@@ -49,6 +49,7 @@ private:
     bool executeBitwiseOrInstruction(u16 opcode);      // 7x
     bool executeBitwiseXorInstruction(u16 opcode);     // 8x
     bool executeMultiplicationInstruction(u16 opcode); // 9x
+    bool executeDivisionInstruction(u16 opcode);       // Ax
     bool executeShiftInstruction(u16 opcode);          // Bx
     bool executeStackInstruction(u16 opcode);          // Cx
     bool executePaletteInstruction(u16 opcode);        // Dx
@@ -67,6 +68,7 @@ private:
     bool isSubtractionOverflow(unsigned operand1, unsigned operand2, unsigned result) const;
     
     bool isMultiplicationCarry(unsigned result) const;
+    bool isDivisionCarry(unsigned operand1, unsigned operand2) const;
 
     u16 negate(u16 word);
 
