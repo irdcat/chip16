@@ -1,4 +1,5 @@
 #include <memory>
+#include <sstream>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
@@ -51,4 +52,29 @@ TEST_F(MemoryImplTests, testReadControllerState)
 {
     testedMemory->writeData(0xFFF0, 0x00, 0x89);
     EXPECT_EQ(0x8900, testedMemory->readControllerState(0).raw);
+}
+
+TEST_F(MemoryImplTests, testLoadRomFromStream)
+{
+    const char* ROM = "\x31\x11\x02\x24\x55\x65\x42\x21\x20\x20\x20\x00\x00\x00\x00\x00"
+                      "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+    const std::string ROM_STR(ROM, 32);
+    std::stringstream romStream;
+    romStream.write(&ROM_STR[0], ROM_STR.size());
+
+    testedMemory->loadRomFromStream(romStream);
+
+    auto word1 = testedMemory->readWord(0x0000); // Word at addr 0
+    auto word2 = testedMemory->readWord(0x0002); // Word at addr 2
+    auto word3 = testedMemory->readWord(0x0004); // Word at addr 4
+
+    auto byte1 = testedMemory->readByte(0x0006); // Word at addr 6
+    auto byte2 = testedMemory->readByte(0x0007); // Word at addr 7
+
+    EXPECT_EQ(0x1131, word1);
+    EXPECT_EQ(0x2402, word2);
+    EXPECT_EQ(0x6555, word3);
+
+    EXPECT_EQ(0x42, byte1);
+    EXPECT_EQ(0x21, byte2);
 }

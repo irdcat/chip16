@@ -91,7 +91,7 @@ void CpuImpl::executeInstruction(u16 opcode)
         LOG.error("Unknown opcode: ", logHex(opcode));
 }
 
-CpuImpl::Registers& CpuImpl::getRegisters()
+CpuRegisters& CpuImpl::getRegisters()
 {
     return registers;
 }
