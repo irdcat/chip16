@@ -46,3 +46,10 @@ std::vector<u8>::const_iterator MemoryImpl::readByteReference(u16 addr) const
     LOG.debug("Reading reference from memory at address ", logHex(addr));
     return memory.begin() + addr;
 }
+
+void MemoryImpl::loadRomFromStream(std::istream& is)
+{
+    LOG.debug("Loading ROM from stream");
+    for (auto pos = 0u; is.good(); pos++)
+        memory[pos % 0x10000] = is.get();
+}

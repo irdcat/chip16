@@ -21,6 +21,7 @@ namespace
         MOCK_METHOD2(writeWord, void(u16, u16));
         MOCK_CONST_METHOD1(readControllerState, ControllerState(unsigned));
         MOCK_CONST_METHOD1(readByteReference, std::vector<u8>::const_iterator(u16));
+        MOCK_METHOD1(loadRomFromStream, void(std::istream&));
     };
 
     class BusMock : public Bus

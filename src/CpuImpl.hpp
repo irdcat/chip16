@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "Cpu.hpp"
-#include "CpuFlags.hpp"
 #include "Memory.hpp"
 #include "Bus.hpp"
 #include "ConditionalBranch.hpp"
@@ -28,15 +27,7 @@ public:
 
 	void executeInstruction(u16 opcode) override;
 
-    struct Registers 
-    {
-        u16 pc;
-        u16 sp;
-        u16 r[16];
-        CpuFlags flags;
-    };
-
-    Registers& getRegisters();
+    CpuRegisters& getRegisters() override;
 
 private:
     bool executeMiscInstruction(u16 opcode);           // 0x
@@ -72,7 +63,7 @@ private:
 
     u16 negate(u16 word);
 
-    Registers registers;
+    CpuRegisters registers;
     std::shared_ptr<Memory> memory;
     std::shared_ptr<Bus> bus;
 
