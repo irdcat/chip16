@@ -27,7 +27,7 @@ inline HexModificator<T>::HexModificator(T value)
 template<typename T>
 inline void HexModificator<T>::apply(std::ostream& os) const
 {
-    os << std::uppercase << std::hex << value;
+    os << "0x" << std::uppercase << std::hex << value;
 }
 
 template<typename T>

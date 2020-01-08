@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <istream>
 #include "Types.hpp"
 #include "ControllerState.hpp"
 
@@ -56,4 +57,11 @@ public:
      * @return Reference to byte from memory.
      */
     virtual std::vector<u8>::const_iterator readByteReference(u16 addr) const = 0;
+
+    /**
+     * Loads rom in given stream into memory.
+     *
+     * @param is Input stream containing data to be loaded.
+     */
+    virtual void loadRomFromStream(std::istream& is) = 0;
 };

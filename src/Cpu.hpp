@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types.hpp"
+#include "CpuRegisters.hpp"
 
 class Cpu
 {
@@ -34,4 +35,11 @@ public:
      * @param opcode Opcode of the instruction to be executed.
      */
 	virtual void executeInstruction(u16 opcode) = 0;
+
+    /**
+     * Returns struct containing cpu internal registers.
+     *
+     * @return Cpu registers.
+     */
+    virtual CpuRegisters& getRegisters() = 0;
 };
