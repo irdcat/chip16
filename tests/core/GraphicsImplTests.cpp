@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/GraphicsImpl.hpp"
+#include "../../src/core/GraphicsImpl.hpp"
 
 namespace
 {

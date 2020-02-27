@@ -100,10 +100,10 @@ RomHeader RomFacadeImpl::extractHeaderFromFile(std::istream& istream)
 
 void RomFacadeImpl::logRomHeader(const RomHeader& header)
 {
-    const std::string SPECYFICATION_VERSION = std::to_string(header.specVersion >> 4) + '.' + std::to_string(header.specVersion & 0xF);
+    const std::string SPECIFICATION_VERSION = std::to_string(header.specVersion >> 4) + '.' + std::to_string(header.specVersion & 0xF);
 
     LOG.info("ROM header info:\n\t",
-        "Specyfication version: ", SPECYFICATION_VERSION       , "\n\t",
+        "Specyfication version: ", SPECIFICATION_VERSION       , "\n\t",
         "ROM size in bytes: "    , logNumber(header.romSize)   , "\n\t",
         "Start address: "        , logHex(header.startAddr)    , "\n\t",
         "CRC32 checksum: "       , logHex(header.crc32Checksum));

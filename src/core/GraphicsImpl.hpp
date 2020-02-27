@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Graphics.hpp"
-#include "log/Logger.hpp"
-#include "log/HexModificator.hpp"
-#include "log/NumberModificator.hpp"
+#include "../log/Logger.hpp"
+#include "../log/HexModificator.hpp"
+#include "../log/NumberModificator.hpp"
 
 class GraphicsImpl : public Graphics
 {

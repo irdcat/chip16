@@ -4,8 +4,8 @@
 #include <sstream>
 #include <utility>
 
-#include "../Cpu.hpp"
-#include "../Memory.hpp"
+#include "../core/Cpu.hpp"
+#include "../core/Memory.hpp"
 #include "RomHeader.hpp"
 #include "RomFacade.hpp"
 #include "../utils/Crc32.hpp"

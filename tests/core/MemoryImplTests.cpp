@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "../src/MemoryImpl.hpp"
+#include "../../src/core/MemoryImpl.hpp"
 
 namespace
 {
