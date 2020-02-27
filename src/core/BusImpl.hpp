@@ -2,7 +2,7 @@
 
 #include "Bus.hpp"
 #include "Graphics.hpp"
-#include "log/Logger.hpp"
+#include "../log/Logger.hpp"
 
 class BusImpl : public Bus
 {

@@ -38,53 +38,56 @@ void CpuImpl::executeInstruction(u16 opcode)
     const auto group = decodeNibble(opcode, 3);
     bool result = false;
 
-    switch (group)
+    if (validateInstructionIndex(opcode))
     {
-    case 0x0:
-        result = executeMiscInstruction(opcode);
-        break;
-    case 0x1: 
-        result = executeJumpInstruction(opcode); 
-        break;
-    case 0x2:
-        result = executeLoadInstruction(opcode);
-        break;
-    case 0x3:
-        result = executeStoreInstruction(opcode);
-        break;
-    case 0x4:
-        result = executeAdditionInstruction(opcode);
-        break;
-    case 0x5:
-        result = executeSubtractionInstruction(opcode);
-        break;
-    case 0x6:
-        result = executeBitwiseAndInstruction(opcode);
-        break;
-    case 0x7:
-        result = executeBitwiseOrInstruction(opcode);
-        break;
-    case 0x8:
-        result = executeBitwiseXorInstruction(opcode);
-        break;
-    case 0x9:
-        result = executeMultiplicationInstruction(opcode);
-        break;
-    case 0xA:
-        result = executeDivisionInstruction(opcode);
-        break;
-    case 0xB:
-        result = executeShiftInstruction(opcode);
-        break;
-    case 0xC:
-        result = executeStackInstruction(opcode);
-        break;
-    case 0xD:
-        result = executePaletteInstruction(opcode);
-        break;
-    case 0xE:
-        result = executeNegationInstruction(opcode);
-        break;
+        switch (group)
+        {
+        case 0x0:
+            result = executeMiscInstruction(opcode);
+            break;
+        case 0x1:
+            result = executeJumpInstruction(opcode);
+            break;
+        case 0x2:
+            result = executeLoadInstruction(opcode);
+            break;
+        case 0x3:
+            result = executeStoreInstruction(opcode);
+            break;
+        case 0x4:
+            result = executeAdditionInstruction(opcode);
+            break;
+        case 0x5:
+            result = executeSubtractionInstruction(opcode);
+            break;
+        case 0x6:
+            result = executeBitwiseAndInstruction(opcode);
+            break;
+        case 0x7:
+            result = executeBitwiseOrInstruction(opcode);
+            break;
+        case 0x8:
+            result = executeBitwiseXorInstruction(opcode);
+            break;
+        case 0x9:
+            result = executeMultiplicationInstruction(opcode);
+            break;
+        case 0xA:
+            result = executeDivisionInstruction(opcode);
+            break;
+        case 0xB:
+            result = executeShiftInstruction(opcode);
+            break;
+        case 0xC:
+            result = executeStackInstruction(opcode);
+            break;
+        case 0xD:
+            result = executePaletteInstruction(opcode);
+            break;
+        case 0xE:
+            result = executeNegationInstruction(opcode);
+            break;
+        }
     }
 
     if (!result) 
@@ -96,12 +99,21 @@ CpuRegisters& CpuImpl::getRegisters()
     return registers;
 }
 
+bool CpuImpl::validateInstructionIndex(u16 opcode)
+{
+    static const unsigned MAX_INDEXES[] = {
+        0xE, 0x8, 0x4, 0x1,
+        0x2, 0x4, 0x4, 0x2,
+        0x2, 0x2, 0x8, 0x5, 
+        0x5, 0x1, 0x5
+    };
+    return decodeNibble(opcode, 2) <= MAX_INDEXES[decodeNibble(opcode, 3)];
+}
+
 bool CpuImpl::executeMiscInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 0xE)
-        return false;
-
+    
     if (innerInstructionIndex == 0)
     {
         // NOP
@@ -189,8 +201,6 @@ bool CpuImpl::executeMiscInstruction(u16 opcode)
 bool CpuImpl::executeJumpInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 8)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -254,8 +264,6 @@ bool CpuImpl::executeJumpInstruction(u16 opcode)
 bool CpuImpl::executeLoadInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 4)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -296,8 +304,6 @@ bool CpuImpl::executeLoadInstruction(u16 opcode)
 bool CpuImpl::executeStoreInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 1)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -319,8 +325,6 @@ bool CpuImpl::executeStoreInstruction(u16 opcode)
 bool CpuImpl::executeAdditionInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 2)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -368,8 +372,6 @@ bool CpuImpl::executeAdditionInstruction(u16 opcode)
 bool CpuImpl::executeSubtractionInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 4)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -440,8 +442,6 @@ bool CpuImpl::executeSubtractionInstruction(u16 opcode)
 bool CpuImpl::executeBitwiseAndInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 4)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -491,8 +491,6 @@ bool CpuImpl::executeBitwiseAndInstruction(u16 opcode)
 bool CpuImpl::executeBitwiseOrInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 2)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -526,8 +524,6 @@ bool CpuImpl::executeBitwiseOrInstruction(u16 opcode)
 bool CpuImpl::executeBitwiseXorInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 2)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -561,8 +557,6 @@ bool CpuImpl::executeBitwiseXorInstruction(u16 opcode)
 bool CpuImpl::executeMultiplicationInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 2)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -607,8 +601,6 @@ bool CpuImpl::executeMultiplicationInstruction(u16 opcode)
 bool CpuImpl::executeDivisionInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 8)
-        return false;
 
     auto rem = [](const auto operand1, const auto operand2) {
         return operand1 % operand2;
@@ -726,8 +718,6 @@ bool CpuImpl::executeDivisionInstruction(u16 opcode)
 bool CpuImpl::executeShiftInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 5)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -789,8 +779,6 @@ bool CpuImpl::executeShiftInstruction(u16 opcode)
 bool CpuImpl::executeStackInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 5)
-        return false;
 
     if (innerInstructionIndex == 0)
     {
@@ -827,8 +815,6 @@ bool CpuImpl::executeStackInstruction(u16 opcode)
 bool CpuImpl::executePaletteInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 1)
-        return false;
 
     u16 addr = innerInstructionIndex == 0 ? 
         memory->readWord(registers.pc) : registers.r[decodeNibble(opcode, 0)];
@@ -848,8 +834,6 @@ bool CpuImpl::executePaletteInstruction(u16 opcode)
 bool CpuImpl::executeNegationInstruction(u16 opcode)
 {
     const auto innerInstructionIndex = decodeNibble(opcode, 2);
-    if (innerInstructionIndex > 5)
-        return false;
 
     if (innerInstructionIndex == 0)
     {

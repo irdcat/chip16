@@ -6,9 +6,9 @@
 #include "Memory.hpp"
 #include "Bus.hpp"
 #include "ConditionalBranch.hpp"
-#include "log/Logger.hpp"
-#include "log/HexModificator.hpp"
-#include "utils/Random.hpp"
+#include "../log/Logger.hpp"
+#include "../log/HexModificator.hpp"
+#include "../utils/Random.hpp"
 
 class CpuImpl : public Cpu
 {
@@ -30,6 +30,8 @@ public:
     CpuRegisters& getRegisters() override;
 
 private:
+    bool validateInstructionIndex(u16 opcode);
+
     bool executeMiscInstruction(u16 opcode);           // 0x
     bool executeJumpInstruction(u16 opcode);           // 1x
     bool executeLoadInstruction(u16 opcode);           // 2x
