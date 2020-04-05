@@ -20,14 +20,14 @@ public:
 
 template<typename T>
 inline HexModificator<T>::HexModificator(T value)
-    : LogModificator(value)
+    : LogModificator<T>(value)
 {
 }
 
 template<typename T>
 inline void HexModificator<T>::apply(std::ostream& os) const
 {
-    os << "0x" << std::uppercase << std::hex << value;
+    os << "0x" << std::uppercase << std::hex << this->value;
 }
 
 template<typename T>

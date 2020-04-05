@@ -19,7 +19,7 @@ public:
 
 template<typename T>
 inline NumberModificator<T>::NumberModificator(T value)
-    : LogModificator(value)
+    : LogModificator<T>(value)
 {
 }
 
@@ -27,9 +27,9 @@ template<typename T>
 inline void NumberModificator<T>::apply(std::ostream& os) const
 {
     if constexpr (std::is_signed_v<T>)
-        os << static_cast<signed>(value);
+        os << static_cast<signed>(this->value);
     else
-        os << static_cast<unsigned>(value);
+        os << static_cast<unsigned>(this->value);
 }
 
 template <typename T>

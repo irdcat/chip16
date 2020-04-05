@@ -86,7 +86,7 @@ inline const std::string GenericLogger<StreamType>::getTimeAsString()
     std::stringstream ss;
     ss.str("");
     struct tm tm;
-    localtime_s(&tm, &nowTimeT);
+    localtime_r(&nowTimeT, &tm);
     ss << std::put_time(&tm, "%Y-%m-%d_%X");
     return ss.str();
 }
