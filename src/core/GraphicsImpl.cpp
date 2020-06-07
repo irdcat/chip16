@@ -8,6 +8,7 @@ GraphicsImpl::GraphicsImpl()
     , registers()
     , vblank(false)
 {
+    initPalette();
 }
 
 void GraphicsImpl::initPalette()
@@ -59,6 +60,11 @@ void GraphicsImpl::setBackgroundColorIndex(u8 index)
 {
     LOG.debug("Setting background color index to ", logHex(index));
     registers.bg = index;
+}
+
+u8 GraphicsImpl::getBackgroundColorIndex()
+{
+    return registers.bg;
 }
 
 void GraphicsImpl::setSpriteDimensions(u8 width, u8 height)
@@ -137,9 +143,13 @@ bool GraphicsImpl::drawSprite(u16 x, u16 y, std::vector<u8>::const_iterator star
         collision |= put(addr2, data2);
 
         if (!registers.hflip)
+        {
             incrementAndNormalizeOverflow(xPos, 2, SCREEN_WIDTH);
+        }
         else
+        {
             decrementAndNormalizeUnderflow(xPos, 2, SCREEN_WIDTH);
+        }
 
         if (!registers.vflip && (registers.hflip ? xPos < X_START : xPos > X_END))
         {
@@ -165,6 +175,11 @@ void GraphicsImpl::setVFlip(bool flip)
 {
     LOG.debug("Setting vertical flip to ", flip);
     registers.vflip = flip;
+}
+
+void GraphicsImpl::setVBlank(bool value)
+{
+    vblank = value;
 }
 
 bool GraphicsImpl::isVBlank() const

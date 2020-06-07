@@ -55,6 +55,13 @@ public:
     virtual void setBackgroundColorIndex(u8 index) = 0;
 
     /**
+     * Gets currently set background color index.
+     * 
+     * @return Background Color Index.
+     */
+    virtual u8 getBackgroundColorIndex() = 0;
+
+    /**
      * Sets sprite dimensions.
      * 
      * @param width Width of the sprite.
@@ -85,6 +92,13 @@ public:
      * @param flip Vertical flip value.
      */
     virtual void setVFlip(bool flip) = 0;
+
+    /**
+     * Sets VBLANK flag value.
+     * 
+     * @param value VBLANK value.
+     */
+    virtual void setVBlank(bool value) = 0;
 
     /**
      * Returns VBlank flag status.

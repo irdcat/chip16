@@ -2,3 +2,8 @@
 .vs
 *.sln
 *.vcxproj*
+*CMakeFiles
+CMakeCache.txt
+*.cmake
+*Makefile
+build

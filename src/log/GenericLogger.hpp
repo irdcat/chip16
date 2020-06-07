@@ -1,5 +1,7 @@
 #pragma once
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <memory>
 #include <string>
 #include <sstream>
@@ -81,12 +83,12 @@ template<class StreamType>
 inline const std::string GenericLogger<StreamType>::getTimeAsString()
 {
     auto now = std::chrono::system_clock::now();
-    auto nowTimeT = std::chrono::system_clock::to_time_t(now);
+    const auto nowTimeT = std::chrono::system_clock::to_time_t(now);
 
     std::stringstream ss;
     ss.str("");
     struct tm tm;
-    localtime_r(&nowTimeT, &tm);
+    localtime_s(&tm, &nowTimeT);
     ss << std::put_time(&tm, "%Y-%m-%d_%X");
     return ss.str();
 }
