@@ -26,6 +26,8 @@ public:
 
     void setBackgroundColorIndex(u8 index) override;
 
+    u8 getBackgroundColorIndex() override;
+
     void setSpriteDimensions(u8 width, u8 height) override;
 
     bool drawSprite(u16 x, u16 y, std::vector<u8>::const_iterator start) override;
@@ -33,6 +35,8 @@ public:
     void setHFlip(bool flip) override;
 
     void setVFlip(bool flip) override;
+
+    void setVBlank(bool value) override;
 
     bool isVBlank() const override;
 

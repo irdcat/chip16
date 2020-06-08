@@ -65,4 +65,11 @@ public:
      * @return True or false depending on VBlank status.
      */
     virtual bool isVBlank() const = 0;
+
+    /**
+     * Sets VBlank flag value.
+     * 
+     * @param value VBlank flag value to set.
+     */
+    virtual void setVBlank(bool value) const = 0;
 };

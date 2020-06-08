@@ -29,6 +29,8 @@ public:
 
     bool isVBlank() const override;
 
+    void setVBlank(bool value) const override;
+
 private:
     std::shared_ptr<Graphics> graphics;
 

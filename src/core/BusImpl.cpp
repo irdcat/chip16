@@ -47,3 +47,8 @@ bool BusImpl::isVBlank() const
 {
     return graphics->isVBlank();
 }
+
+void BusImpl::setVBlank(bool value) const
+{
+    graphics->setVBlank(value);
+}

@@ -125,7 +125,14 @@ bool CpuImpl::executeMiscInstruction(u16 opcode)
     else if (innerInstructionIndex == 2)
     {
         if (!bus->isVBlank())
+        {
             registers.pc -= 4;
+        }
+        else
+        {
+            bus->setVBlank(false);
+        }
+        
     }
     else if (innerInstructionIndex == 3)
     {
